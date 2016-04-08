@@ -8,20 +8,28 @@ output:
     number_sections: yes
     toc: true
     toc_depth: 2
+bibliography: 
+  - bibliography.bib
     
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE) 
 
-#Setting the working directory
-try(setwd("/Users/emiliasicari/Desktop/Third-assignment-"), silent = TRUE)
+#setting working directory
+getwd()
+try(setwd('/Users/emiliasicari/Desktop/Third-assignment-'))
 
-#Loading packages, or installing them if not already installed
-install.packages("devtools")
+#loading packages or installing them if not already available
 library(devtools)
-install_github(('quandl/R-package'), force=TRUE)
 library(Quandl)
+
+#importing data on economic growth
+URL <- "https://www.quandl.com/api/v3/datasets/ODA/SGP_NGDPPC.csv"
+main <- repmis::source_data(URL)
+
+#Importing data on income inequality from 
+MyData <- read.csv(file="ObservationData_wvdxeeg.csv", header=TRUE, sep=",")
 
 ```
 
@@ -31,10 +39,20 @@ library(Quandl)
 Our collaborative research project seeks to provide an answer to the following question: **How the rise in the rise in inequality and economic growth influences the purchase of luxury goods, particularly cars, and the usage of public transportation systems in Singapore, from 1960 to 2015**. 
 More details about the research proposal are available in the repository [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal).
 
-#Data preparation
+#Data overview
 
-#Data sources
 
-#Data gathering 
+#Data sources and data gathering
+The data that we need for our empirical analysis are to be retrieved from different sources:
 
-#Descriptive and inferen
+* IMF Cross Country Macroeconomic Statistics open data, containing cross-country marcoeconomic data.From this source we downloaded the dataset on Singapore GDP per Capita at Current Prices measured in national currency. Data were downloaded in csv format from [Quandl](https://www.quandl.com/data/ODA/SGP_NGDPPC), providing high-quality financial and economic data in different formats to facilitate data analysis.
+
+* [Knoema](http://knoema.com/), a knowledge platform connecting data with analytical and presentation tools, in order to allow users to access, present and share data-driven content. From  The World Top Incomes Database - providing access to data on the distribution of top incomes in more than twenty five countries across the globe - we downloaded data about income inequality on Singapore measured by the inverted Pareto-Lorenz coefficient. This coefficient, measures the average income of people above y, relative to y, providing a direct and intuitiver measure of the fatness of the upper tail of the distribution: the higher the coefficient, the larger the shares of top incomes (meaning an higher top income inequality). In practice, the coefficient typically varies between 1.5 and 2.5: values around 1.5 or below indicate low top income inequality, while values around 2.5 or below indicate high top income inequality. A value of 1.5 means that people above a specified level have on average 50 per cent more income; a value of 2.5 means that they have 150 per cent more income [@atkinson2009top]
+The reason why we did not gather data from the database [Clio Infra](https://www.quandl.com/data/CLIO/SGP_II-Income-Inequality-Singapore) available on Quandl as we had defined in our [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal) , is that it did not provide sufficient data for the time span we are considering. 
+
+* PUBLIC TRANSPORTS
+* PURCHASE OF CARS
+
+#Descriptive and inferential statistics
+
+#References
