@@ -1,0 +1,40 @@
+---
+title: "Third Assignment"
+subtitle: Christopher Gandrud, Hertie School of Governance, Spring 2016
+author: "Emilia Sicari & Rafael Lopez V."
+date: "March 25, 2016"
+output:
+  pdf_document:
+    number_sections: yes
+    toc: true
+    toc_depth: 2
+    
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+#Setting the working directory
+try(setwd("/Users/emiliasicari/Desktop/Third-assignment-"), silent = TRUE)
+
+#Loading packages, or installing them if not already installed
+install.packages("devtools")
+library(devtools)
+install_github(('quandl/R-package'), force=TRUE)
+library(Quandl)
+
+```
+
+\pagebreak
+
+#Research question
+Our collaborative research project seeks to provide an answer to the following question: **How the rise in the rise in inequality and economic growth influences the purchase of luxury goods, particularly cars, and the usage of public transportation systems in Singapore, from 1960 to 2015**. 
+More details about the research proposal are available in the repository [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal).
+
+#Data preparation
+
+#Data sources
+
+#Data gathering 
+
+#Descriptive and inferen
