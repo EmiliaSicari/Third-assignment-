@@ -1,16 +1,17 @@
 ---
 title: "Third Assignment"
-subtitle: Christopher Gandrud, Hertie School of Governance, Spring 2016
 author: "Emilia Sicari & Rafael Lopez V."
 date: "March 25, 2016"
 output:
   pdf_document:
     number_sections: yes
-    toc: true
+    toc: yes
     toc_depth: 2
-bibliography: 
-  - bibliography.bib
-    
+  html_document:
+    toc: yes
+    toc_depth: '2'
+subtitle: Christopher Gandrud, Hertie School of Governance, Spring 2016
+bibliography: bibliography.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -23,35 +24,53 @@ try(setwd('/Users/emiliasicari/Desktop/Third-assignment-'))
 #loading packages or installing them if not already available
 library(devtools)
 library(Quandl)
+library(bibtex)
+library(data.table)
 
-#importing data on economic growth
+
+#importing data on Singapore's economic growth, selecting only the time span of interest
 URL <- "https://www.quandl.com/api/v3/datasets/ODA/SGP_NGDPPC.csv"
-main <- repmis::source_data(URL)
+main <- repmis::source_data(URL, header = TRUE, nrow(30), skip = 11)
+#showing data as data frame
+data.frame(main)
+#adding a new column, and inserting content 
+main["MY_NEW_COLUMN"] <- 'singapore'
+#changing the names of the columns
+names(main) <- c("date", "gdp per capita","country")
+#changing order of columns
+main[,c(3,2,1)]
 
-#Importing data on income inequality from 
-MyData <- read.csv(file="ObservationData_wvdxeeg.csv", header=TRUE, sep=",")
+#importing data on Singapore's income inequality, selecting only the time span of interest
+MyData <- read.csv2(file="ObservationData_wvdxeeg.csv", header=TRUE, sep = ",", nrows = 17, skip = 32)
+#showing data as data frame
+data.frame(MyData)
+#changing the names of the columns
+names(MyData) <- c("country", "inverted pareto lorenz coefficient", "unit", "date", "inequality")
+
 
 ```
 
 \pagebreak
 
-#Research question
-Our collaborative research project seeks to provide an answer to the following question: **How the rise in the rise in inequality and economic growth influences the purchase of luxury goods, particularly cars, and the usage of public transportation systems in Singapore, from 1960 to 2015**. 
-More details about the research proposal are available in the repository [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal).
+#Research question and project description
+In our collaborative research project, we seeks to provide an answer to the following question: **How the rise in the rise in inequality and economic growth influences the purchase of luxury goods, particularly cars, and the usage of public transportation systems in Singapore, from 1960 to 2015**. 
+Therefore, we collected data on economic growth, income inequality, usage of public transports and purchase of cars covering the time span of 29 years, from 1980 until 2009. As suggested by our research question, economic growth, income inequality and usage of public transports are the explanatory variables, while purchase of cars is the dependent variable. The reason why we chose cars as example of luxury goods showing social status, is that in Singapore purchasing of cars is particularly expensive, due to high taxation and a certificate of car entitlement, whose cost can be higher than 70.000 dollars. For more details about the research proposal and case justification see [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal).
 
-#Data overview
+#Processing data
 
-
-#Data sources and data gathering
+##Data sources and data gathering
 The data that we need for our empirical analysis are to be retrieved from different sources:
 
-* IMF Cross Country Macroeconomic Statistics open data, containing cross-country marcoeconomic data.From this source we downloaded the dataset on Singapore GDP per Capita at Current Prices measured in national currency. Data were downloaded in csv format from [Quandl](https://www.quandl.com/data/ODA/SGP_NGDPPC), providing high-quality financial and economic data in different formats to facilitate data analysis.
+* IMF Cross Country Macroeconomic Statistics open data, containing cross-country marcoeconomic data.From this source we downloaded the dataset on Singapore GDP per Capita at Current Prices measured in national currency from 1980 until 2020 (forecasts) . Data were downloaded in csv format from [Quandl](https://www.quandl.com/data/ODA/SGP_NGDPPC), providing high-quality financial and economic data in different formats to facilitate data analysis.
 
-* [Knoema](http://knoema.com/), a knowledge platform connecting data with analytical and presentation tools, in order to allow users to access, present and share data-driven content. From  The World Top Incomes Database - providing access to data on the distribution of top incomes in more than twenty five countries across the globe - we downloaded data about income inequality on Singapore measured by the inverted Pareto-Lorenz coefficient. This coefficient, measures the average income of people above y, relative to y, providing a direct and intuitiver measure of the fatness of the upper tail of the distribution: the higher the coefficient, the larger the shares of top incomes (meaning an higher top income inequality). In practice, the coefficient typically varies between 1.5 and 2.5: values around 1.5 or below indicate low top income inequality, while values around 2.5 or below indicate high top income inequality. A value of 1.5 means that people above a specified level have on average 50 per cent more income; a value of 2.5 means that they have 150 per cent more income [@atkinson2009top]
+* [Knoema](http://knoema.com/), a knowledge platform connecting data with analytical and presentation tools, in order to allow users to access, present and share data-driven content. From  The World Top Incomes Database - providing access to data on the distribution of top incomes in more than twenty five countries across the globe - we downloaded data about income inequality on Singapore measured by the inverted Pareto-Lorenz coefficient from 1947 until 2009. This coefficient, measures the average income of people above y, relative to y, providing a direct and intuitiver measure of the fatness of the upper tail of the distribution: the higher the coefficient, the larger the shares of top incomes (meaning an higher top income inequality). In practice, the coefficient typically varies between 1.5 and 2.5: values around 1.5 or below indicate low top income inequality, while values around 2.5 or below indicate high top income inequality. A value of 1.5 means that people above a specified level have on average 50 per cent more income; a value of 2.5 means that they have 150 per cent more income [@atkinson2009top]
 The reason why we did not gather data from the database [Clio Infra](https://www.quandl.com/data/CLIO/SGP_II-Income-Inequality-Singapore) available on Quandl as we had defined in our [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal) , is that it did not provide sufficient data for the time span we are considering. 
 
 * PUBLIC TRANSPORTS
 * PURCHASE OF CARS
+
+##Cleaning and merging of datasets
+After importing data on R and cleaning them, we merged the datasets. The final dataset has TOT observations....
 
 #Descriptive and inferential statistics
 

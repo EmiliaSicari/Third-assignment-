@@ -15,3 +15,7 @@ The requirements of the assignment are the following:
 * Describes the data gathering and analysis in maximum 1500 words also using literate programming.
 
 #Contents of the repository
+
+The repository contains the following elements:
+
+* 
