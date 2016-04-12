@@ -1,0 +1,131 @@
+---
+title: "Third Assignment"
+author: "Emilia Sicari & Rafael Lopez V."
+date: "March 25, 2016"
+output:
+  html_document:
+    toc: yes
+    toc_depth: '2'
+  pdf_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 2
+subtitle: Christopher Gandrud, Hertie School of Governance, Spring 2016
+bibliography:
+- bibliography.bib
+- packages.bib
+---
+
+```{r setup, include=FALSE, error=FALSE, message=FALSE, results = 'asis'}
+knitr::opts_chunk$set(echo = TRUE) 
+
+#setting working directory
+getwd()
+try(setwd('/Users/emiliasicari/Desktop/Third-assignment-'), silent = TRUE)
+try(setwd("/Users/rafalopezv/Dropbox/R/Third-assignment/"), silent = TRUE)
+
+#loading packages or installing them if not already available
+library(devtools)
+library(Quandl)
+library(data.table)
+library(rio)
+library(ggplot2)
+
+# importing data on Singapore's economic growth, selecting only the time span of interest
+URL <- "https://www.quandl.com/api/v3/datasets/ODA/SGP_NGDPPC.csv"
+gdp.pc <- repmis::source_data(URL, header = TRUE, nrows=21, skip = 5)
+#adding a new column, and inserting content 
+gdp.pc["MY_NEW_COLUMN"] <- 2015:1995
+#erasing a column
+gdp.pc$`2016-12-31`<- NULL
+#changing the names of the columns
+names(gdp.pc) <- c("gdp per capita", "date")
+#changing order of columns
+gdp.pc[,c(2,1)]
+#checking the class of the varibles
+sapply(gdp.pc, class)
+
+#importing data on Singapore's bottom 90% average income, selecting only the time span of interest
+bottom <- read.csv('/Users/emiliasicari/Desktop/Third-assignment-/ObservationData_zqpldgb.csv', header = TRUE, skip = 20)
+#erasing columns
+bottom$Singapore <- NULL
+bottom$Bottom.90..average.income <- NULL
+bottom$Real.2010.Singapore.Dollars <- NULL
+bottom$X1.1.1994.12.00.00.AM <- NULL
+#adding a new column and inserting content
+bottom["MY_NEW_COLUMN"] <- 1995:2009
+#rename columns
+names(bottom) <- c("bottom", "date")
+#reorder columns
+bottom[,c(2,1)]
+#checking the class of the varibles
+sapply(bottom, class)
+#forecasrting the bottom 90% average income for the missing years (2010-2015) and creating a dataframe with the forecasted values
+Forecast <- lm(bottom  ~ date, data = bottom)
+116.7*2010+(-204924.2) #forcasted bottom 90% average income for 2010
+116.7*2011+(-204924.2) #forcasted bottom 90% average income for 2011
+116.7*2012+(-204924.2) #forcasted bottom 90% average income for 2012
+116.7*2013+(-204924.2) #forcasted bottom 90% average income for 2013
+116.7*2014+(-204924.2) #forcasted bottom 90% average income for 2014
+116.7*2015+(-204924.2) #forcasted bottom 90% average income for 2015
+new.bottom <- data.frame(date = c(2010, 2011, 2012, 2013, 2014, 2015), bottom = c(29642.8, 29759.5, 29876.2, 29992.9, 30109.6, 30226.3)) #creating a new dataframe with the forecastedvalues
+new.bottom #visualising the new dataframe
+#binding the new.bottom dataframe with the original bottom dataframe
+bottom.complete <- rbind(bottom, new.bottom)
+
+#importing data on Singapore's top 10% average income, selecting only the time span of interest
+top <-read.csv('/Users/emiliasicari/Desktop/Third-assignment-/ObservationData_rblkfmd.csv', header = TRUE, skip = 20)
+#erasing columns
+top$Singapore <- NULL
+top$Top.10..average.income <- NULL
+top$Real.2010.Singapore.Dollars <- NULL
+top$X1.1.1994.12.00.00.AM <- NULL
+#adding a new column and inserting content
+top["MY_NEW_COLUMN"] <- 1995:2009
+#rename columns
+names(top) <- c("top", "date")
+#reorder columns
+top[,c(2,1)]
+#checking the class of the varibles
+sapply(top, class)
+#forecasrting the top 10% average income for the missing years (2010-2015) and creating a dataframe with the forecasted values
+Forecast2 <- lm(top ~ date, data = top)
+Forecast2
+6312*2010-12476918  #forcasted top 10% average income for 2010
+6312*2011-12476918  #forcasted top 10% average income for 2011
+6312*2012-12476918  #forcasted top 10% average income for 2012
+6312*2013-12476918  #forcasted top 10% average income for 2013
+6312*2014-12476918  #forcasted top 10% average income for 2014
+6312*2015-12476918  #forcasted top 10% average income for 2015
+new.top <- data.frame(date = c(2010, 2011, 2012, 2013, 2014, 2015), top = c(210202, 216514, 222826, 229138, 235450, 241762)) #creating a new dataframe with the forecastedvalues
+new.top #visualising the new dataframe
+#binding the new.top dataframe with the original top dataframe
+top.complete <- rbind(top, new.top)
+
+```
+
+\pagebreak
+
+#Research question and project description
+In our collaborative research project, we seeks to provide an answer to the following question: **How the rise in the rise in inequality and economic growth influences the purchase of luxury goods, particularly cars, and the usage of public transportation systems in Singapore, from 1960 to 2015**. 
+Therefore, we collected data on economic growth, income inequality, usage of public transports and purchase of cars covering the time span of 29 years, from 1980 until 2009. As suggested by our research question, economic growth, income inequality and usage of public transports are the explanatory variables, while purchase of cars is the dependent variable. The reason why we chose cars as example of luxury goods showing social status, is that in Singapore purchasing of cars is particularly expensive, due to high taxation and a certificate of car entitlement, whose cost can be higher than 70.000 dollars. For more details about the research proposal and case justification see [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal).
+
+#Processing data
+
+##Data sources and data gathering
+The data that we need for our empirical analysis are to be retrieved from different sources:
+
+* IMF Cross Country Macroeconomic Statistics open data, containing cross-country marcoeconomic data.From this source we downloaded the dataset on Singapore GDP per Capita at Current Prices measured in national currency from 1995 until 2015 . Data were downloaded in csv format from [Quandl](https://www.quandl.com/data/ODA/SGP_NGDPPC), a website providing high-quality financial and economic data in different formats to facilitate data analysis.
+
+* [Knoema](http://knoema.com/), a knowledge platform connecting data with analytical and presentation tools, in order to allow users to access, present and share data-driven content. From  The World Top Incomes Database - providing access to data on the distribution of top incomes in more than twenty five countries across the globe - we downloaded data on the top 10% average income and bottom 90% average income in Singapore, to be compared in order to understand how many times the top 10% average income is higher than the bottom 90%. Since data were available only until 2009, the values of bottom 90% and top 10% average income between 2010 and 2015 were forcated with a linear regression. 
+The reason why we did not gather data from the database [Clio Infra](https://www.quandl.com/data/CLIO/SGP_II-Income-Inequality-Singapore) available on Quandl as we had defined in our [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal) , is that it did not provide sufficient data for the time span we are considering. 
+
+* PUBLIC TRANSPORTS
+* PURCHASE OF CARS
+
+##Cleaning and merging of datasets
+After importing data on R and cleaning them, we merged the datasets. The final dataset has TOT observations....
+
+#Descriptive and inferential statistics
+
+#References
