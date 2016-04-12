@@ -11,21 +11,31 @@ output:
     toc: yes
     toc_depth: '2'
 subtitle: Christopher Gandrud, Hertie School of Governance, Spring 2016
-bibliography: bibliography.bib
+bibliography: 
+  - bibliography.bib
+  - packages.bib
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, error=FALSE, message=FALSE, results = 'asis'}
 knitr::opts_chunk$set(echo = TRUE) 
 
 #setting working directory
 getwd()
-try(setwd('/Users/emiliasicari/Desktop/Third-assignment-'))
+try(setwd("/Users/emiliasicari/Desktop/Third-assignment-"), silent = TRUE)
+try(setwd("/Users/rafalopezv/Dropbox/R/Third-assignment/"), silent = TRUE)
+
 
 #loading packages or installing them if not already available
 library(devtools)
 library(Quandl)
 library(data.table)
 library(rio)
+<<<<<<< HEAD
+=======
+# creating an object of the packages for citation purposes
+packages <- c('devtools', 'repmis', 'Quandl', 'data.table', 'rio')
+repmis::LoadandCite(packages, file = 'packages.bib')
+>>>>>>> origin/master
 
 #importing data on Singapore's economic growth, selecting only the time span of interest
 URL <- "https://www.quandl.com/api/v3/datasets/ODA/SGP_NGDPPC.csv"
@@ -33,12 +43,17 @@ gdp.pc <- repmis::source_data(URL, header = TRUE, nrows=21, skip = 5)
 #showing data as data frame
 data.frame(gdp.pc)
 #adding a new column, and inserting content 
+<<<<<<< HEAD
 gdp.pc["MY_NEW_COLUMN"] <- 2015:1995
 #erasing a column
 gdp.pc$`2016-12-31`<- NULL
+=======
+main["MY_NEW_COLUMN"] <- 'singapore' #I think it is not neccessary since Singapore is the only country we are working on
+>>>>>>> origin/master
 #changing the names of the columns
 names(gdp.pc) <- c("gdp per capita", "date")
 #changing order of columns
+<<<<<<< HEAD
 gdp.pc[,c(2,1)]
 #checking the class of the varibles
 sapply(gdp.pc, class)
@@ -99,6 +114,40 @@ new.top <- data.frame(date = c(2010, 2011, 2012, 2013, 2014, 2015), top = c(2102
 new.top #visualising the new dataframe
 #binding the new.top dataframe with the original top dataframe
 top.complete <- rbind(top, new.top)
+=======
+main[,c(3,2,1)]
+
+#importing data on Singapore's income inequality, selecting only the time span of interest
+MyData <- read.csv2(file="ObservationData_wvdxeeg.csv", header=TRUE, sep = ",", nrows = 17, skip = 32)
+#showing data as data frame
+data.frame(MyData)
+#changing the names of the columns
+names(MyData) <- c("country", "inverted pareto lorenz coefficient", "unit", "date", "inequality")
+
+#Downloading data set for public transport utilisation (from 1995 to 2015)
+a <- "https://data.gov.sg/dataset/7f0661dc-6e4f-460f-8e8c-3514c9a8cb6b/resource/552b8662-3cbc-48c0-9fbb-abdc07fb377a/download/public-transport-utilisation-average-public-transport-ridership.csv"
+trans.ut <- repmis::source_data(a)
+
+#Changing the name of the colums 
+names(trans.ut) <- c("year","type","average.1000.day")
+
+#Checking the class of the data
+sapply(trans.ut, class)
+
+#Downloading data for car population (from 1965 to 2015)
+b <- "https://data.gov.sg/dataset/e2673131-f79f-43e3-9579-c17cc25e1735/resource/31ca0cee-6d9e-453a-8b4f-376d37713a10/download/motor-vehicle-population-by-type-of-vehicle-end-of-period-annual.csv"
+car.pop <- repmis::source_data(b)
+
+#Changing the name of the colums
+names(car.pop) <- c("year", "type", "number")
+
+#Checking the class of the data
+sapply(car.pop, class)
+#Transform the data of one of the columns that has been imported as characters
+transform(car.pop, number = as.numeric(number))
+
+
+>>>>>>> origin/master
 ```
 
 \pagebreak
