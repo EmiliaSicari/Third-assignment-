@@ -102,6 +102,46 @@ new.top #visualising the new dataframe
 #binding the new.top dataframe with the original top dataframe
 top.complete <- rbind(top, new.top)
 
+#Downloading data set for public transport utilisation (from 1995 to 2015)
+a <- "https://data.gov.sg/dataset/7f0661dc-6e4f-460f-8e8c-3514c9a8cb6b/resource/552b8662-3cbc-48c0-9fbb-abdc07fb377a/download/public-transport-utilisation-average-public-transport-ridership.csv"
+trans.ut <- repmis::source_data(a)
+
+#Changing the name of the colums 
+names(trans.ut) <- c("year","type","average.1000.day")
+
+#Checking the class of the data
+sapply(trans.ut, class)
+
+# Subsetting the "trans.ut file" to make it compatible with the other data and foreseeing the merging process 
+trans.ut.mrt <- data.frame(subset(trans.ut, type == "MRT"))
+trans.ut.bus <- data.frame(subset(trans.ut, type == "Bus"))
+trans.ut.lrt <- data.frame(subset(trans.ut, type == "LRT"))
+trans.ut.taxi <- data.frame(subset(trans.ut, type == "Taxi"))
+
+#Downloading data for car population (from 1965 to 2015)
+b <- "https://data.gov.sg/dataset/e2673131-f79f-43e3-9579-c17cc25e1735/resource/31ca0cee-6d9e-453a-8b4f-376d37713a10/download/motor-vehicle-population-by-type-of-vehicle-end-of-period-annual.csv"
+car.pop <- repmis::source_data(b)
+
+#Changing the name of the colums
+names(car.pop) <- c("year", "type", "number")
+
+# Eliminating the years that are not compatible with the other data sets
+car.pop1 <- data.frame(subset(car.pop, year > "1994"))
+mean(car.pop1$number)
+
+#Checking the class of the data
+sapply(car.pop1, class)
+
+#Transform the data of one of the columns that have been imported as characters
+car.pop1 <- transform(car.pop1, number = as.numeric(number))
+
+# Subsetting the "car.pop1 file" to make it compatible with the other data and foreseeing the merging process 
+car.pop1.cars <- data.frame(subset(car.pop1, type == "Cars"))
+car.pop1.rentalcars <- data.frame(subset(car.pop1, type == "Rental Cars"))
+car.pop1.taxis <- data.frame(subset(car.pop1, type == "Taxis"))
+car.pop1.buses <- data.frame(subset(car.pop1, type == "Buses"))
+car.pop1.motorbikes <- data.frame(subset(car.pop1, type == "Motorcycles & Scooters"))
+car.pop1.other <- data.frame(subset(car.pop1, type == "Goods & Other Vehicles"))
 ```
 
 \pagebreak
