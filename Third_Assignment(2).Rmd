@@ -102,6 +102,9 @@ new.top #visualising the new dataframe
 #binding the new.top dataframe with the original top dataframe
 top.complete <- rbind(top, new.top)
 
+#creating a new dataset showing the variation between the top 10% and bottom 90% average income over time, to measure inequality between 1995 and 2015
+inequality.complete <- data.frame(date = c(1995:2015), inequality = c(top.complete$top / bottom.complete$bottom))
+                 
 #Downloading data set for public transport utilisation (from 1995 to 2015)
 a <- "https://data.gov.sg/dataset/7f0661dc-6e4f-460f-8e8c-3514c9a8cb6b/resource/552b8662-3cbc-48c0-9fbb-abdc07fb377a/download/public-transport-utilisation-average-public-transport-ridership.csv"
 trans.ut <- repmis::source_data(a)
@@ -148,6 +151,8 @@ car.pop1.taxis <- data.frame(subset(car.pop1, type == "Taxis"))
 car.pop1.buses <- data.frame(subset(car.pop1, type == "Buses"))
 car.pop1.motorbikes <- data.frame(subset(car.pop1, type == "Motorcycles & Scooters"))
 car.pop1.other <- data.frame(subset(car.pop1, type == "Goods & Other Vehicles"))
+
+#merging inequality and gdp per capita dataframes
 ```
 
 \pagebreak
