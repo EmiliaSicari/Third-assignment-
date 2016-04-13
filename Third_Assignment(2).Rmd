@@ -3,17 +3,15 @@ title: "Third Assignment"
 author: "Emilia Sicari & Rafael Lopez V."
 date: "March 25, 2016"
 output:
-  html_document:
-    toc: yes
-    toc_depth: '2'
   pdf_document:
     number_sections: yes
     toc: yes
     toc_depth: 2
+  html_document:
+    toc: yes
+    toc_depth: '2'
 subtitle: Christopher Gandrud, Hertie School of Governance, Spring 2016
-bibliography:
-- bibliography.bib
-- packages.bib
+bibliography: packages.bib
 ---
 
 ```{r setup, include=FALSE, error=FALSE, message=FALSE, results = 'asis'}
@@ -21,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #setting working directory
 getwd()
-try(setwd('/Users/emiliasicari/Desktop/Third_assignment'), silent = TRUE)
+try(setwd("/Users/emiliasicari/Desktop/Third_assignment"), silent = TRUE)
 try(setwd("/Users/rafalopezv/Dropbox/R/Third-assignment/"), silent = TRUE)
 
 #loading packages or installing them if not already available
@@ -30,6 +28,10 @@ library(Quandl)
 library(data.table)
 library(rio)
 library(ggplot2)
+
+# creating an object of the packages for citation purposes
+packages <- c('devtools', 'repmis', 'Quandl', 'data.table', 'rio', 'ggplot2')
+repmis::LoadandCite(packages, file = 'packages.bib')
 
 # importing data on Singapore's economic growth, selecting only the time span of interest
 URL <- "https://www.quandl.com/api/v3/datasets/ODA/SGP_NGDPPC.csv"
@@ -46,7 +48,7 @@ gdp.pc[,c(2,1)]
 sapply(gdp.pc, class)
 
 #importing data on Singapore's bottom 90% average income, selecting only the time span of interest
-bottom <- read.csv('/Users/emiliasicari/Desktop/Third_assignment/ObservationData_zqpldgb.csv', header = TRUE, skip = 20)
+bottom <- read.csv("ObservationData_zqpldgb.csv", header = TRUE, skip = 20)
 #erasing columns
 bottom$Singapore <- NULL
 bottom$Bottom.90..average.income <- NULL
@@ -74,7 +76,7 @@ new.bottom #visualising the new dataframe
 bottom.complete <- rbind(bottom, new.bottom)
 
 #importing data on Singapore's top 10% average income, selecting only the time span of interest
-top <-read.csv('/Users/emiliasicari/Desktop/Third_assignment/ObservationData_rblkfmd.csv', header = TRUE, skip = 20)
+top <-read.csv("ObservationData_rblkfmd.csv", header = TRUE, skip = 20)
 #erasing columns
 top$Singapore <- NULL
 top$Top.10..average.income <- NULL
@@ -154,6 +156,11 @@ car.pop1.other <- data.frame(subset(car.pop1, type == "Goods & Other Vehicles"))
 
 #changing name of the column "year" into "date"
 names(car.pop1.rentalcars) <- c("date", "type", "number")
+names(car.pop1.cars) <- c("date", "type", "number")
+names(car.pop1.taxis) <- c("date", "type", "number")
+names(car.pop1.buses) <- c("date", "type", "number")
+names(car.pop1.motorbikes) <- c("date", "type", "number")
+names(car.pop1.other) <- c("date", "type", "number")
 
 #merging inequality and gdp per capita dataframes
 gdp.ineq <- merge(gdp.pc, inequality.complete, by ='date')
@@ -161,31 +168,56 @@ gdp.ineq <- merge(gdp.pc, inequality.complete, by ='date')
 gdp.ineq1 <- data.frame(subset(gdp.ineq, date<"2015"))
 
 #merging gdp.ineq dataframe with all the other dataframes, and cleaning meanwhile
+
 #merging with cars and cleaning
 dataframe1 <- merge (gdp.ineq1, car.pop1.cars, by ='date')
 dataframe1$type <- NULL
 names(dataframe1) <- c("date", "gdp.per.capita", "inequality", "cars")
+
 #merging with rentalcars and cleaning
 dataframe2 <- merge (dataframe1, car.pop1.rentalcars, by ='date')
 dataframe2$type <- NULL
 names(dataframe2) <- c("date", "gdp.per.capita", "inequality", "cars", "rentalcars")
+
 #merging with taxis and cleaning
 dataframe3 <- merge (dataframe2,car.pop1.taxis, by ='date')
 dataframe3$type <- NULL
 names(dataframe3) <- c("date", "gdp.per.capita", "inequality", "cars", "rentalcars", "taxis")
+
 #merging with buses and cleaning
 dataframe4 <- merge (dataframe3, car.pop1.buses, by ='date')
 dataframe4$type <- NULL
 names(dataframe4) <- c("date", "gdp.per.capita", "inequality", "cars", "rentalcars", "taxis", "buses")
+
 #merging with motorbikes and cleaning
 dataframe5 <- merge (dataframe4, car.pop1.motorbikes, by ='date')
 dataframe5$type <- NULL
 names(dataframe5) <- c("date", "gdp.per.capita", "inequality", "cars", "rentalcars", "taxis", "buses", "motorbikes")
-#creating the final, complete dataframe and cleaning it
-complete.dataframe <- merge (dataframe5, car.pop1.other, by ='date')
-complete.dataframe$type <- NULL
-names(complete.dataframe) <- c("date", "gdp.per.capita", "inequality", "cars", "rentalcars", "taxis", "buses", "motorbikes", "other")
- 
+
+#creating the almost final, complete dataframe and cleaning it
+almost.complete.dataframe <- merge (dataframe5, car.pop1.other, by ='date')
+almost.complete.dataframe$type <- NULL
+names(almost.complete.dataframe) <- c("date", "gdp.per.capita", "inequality", "cars", "rentalcars", "taxis", "buses", "motorbikes", "other")
+
+# Eliminating unnecessary colums of the data frames trans.ut.(x) and changing the names
+
+#buses utilization
+trans.ut.bus$type <- NULL
+names(trans.ut.bus) <- c("date", "bus.u") 
+
+#mrt utilization
+trans.ut.mrt$type <- NULL
+names(trans.ut.mrt) <- c("date", "mrt.u") 
+
+#lrt utilization
+trans.ut.lrt$type <- NULL
+names(trans.ut.lrt) <- c("date", "lrt.u")
+
+# Creating the very final data frame (ufffff)
+data.final1 <- merge (almost.complete.dataframe, trans.ut.bus, by ='date')
+data.final2 <- merge (data.final1, trans.ut.mrt, by ='date')
+data.final <- merge (data.final2, trans.ut.lrt, by ='date')
+
 ```
 
 \pagebreak
@@ -208,7 +240,7 @@ The reason why we did not gather data from the database [Clio Infra](https://www
 * PURCHASE OF CARS
 
 ##Cleaning and merging of datasets
-After importing data on R and cleaning them, we merged the datasets. The final dataset has twenty observations, and eight variable, observed throughout the years 1995 - 2014. 
+After importing data on R and cleaning them, we merged the datasets. The final dataset has nineteen observations, and eleven variables, observed throughout the years 1995 - 2014. 
 
 #Descriptive and inferential statistics
 
