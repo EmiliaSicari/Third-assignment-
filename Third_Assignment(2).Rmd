@@ -3,13 +3,13 @@ title: "Third Assignment"
 author: "Emilia Sicari & Rafael Lopez V."
 date: "March 25, 2016"
 output:
+  html_document:
+    toc: yes
+    toc_depth: '2'
   pdf_document:
     number_sections: yes
     toc: yes
     toc_depth: 2
-  html_document:
-    toc: yes
-    toc_depth: '2'
 subtitle: Christopher Gandrud, Hertie School of Governance, Spring 2016
 bibliography: packages.bib
 ---
@@ -28,6 +28,7 @@ library(Quandl)
 library(data.table)
 library(rio)
 library(ggplot2)
+library(stargazer)
 
 # creating an object of the packages for citation purposes
 packages <- c('devtools', 'repmis', 'Quandl', 'data.table', 'rio', 'ggplot2')
@@ -166,7 +167,8 @@ names(car.pop1.other) <- c("date", "type", "number")
 gdp.ineq <- merge(gdp.pc, inequality.complete, by ='date')
 #eliminating the extra year (2015) in order to proceed with merging with the other data frames
 gdp.ineq1 <- data.frame(subset(gdp.ineq, date<"2015"))
-
+bottom.complete <- data.frame(subset(bottom.complete, date<"2015"))
+top.complete <- data.frame(subset(top.complete, date<"2015"))
 #merging gdp.ineq dataframe with all the other dataframes, and cleaning meanwhile
 
 #merging with cars and cleaning
@@ -210,14 +212,19 @@ trans.ut.mrt$type <- NULL
 names(trans.ut.mrt) <- c("date", "mrt.u") 
 
 #lrt utilization
-trans.ut.lrt$type <- NULL
-names(trans.ut.lrt) <- c("date", "lrt.u")
+trans.ut.lrt2$type <- NULL
+names(trans.ut.lrt2) <- c("date", "lrt.u")
 
 # Creating the very final data frame (ufffff)
 data.final1 <- merge (almost.complete.dataframe, trans.ut.bus, by ='date')
 data.final2 <- merge (data.final1, trans.ut.mrt, by ='date')
-data.final <- merge (data.final2, trans.ut.lrt, by ='date')
+data.final3 <- merge (data.final2, top.complete, by='date')
+data.final4 <- merge (data.final3, bottom.complete, by='date')
+data.final <- merge (data.final4, trans.ut.lrt2, by ='date')
 
+# Moving the columns
+data.final[,c(1,2,3,12,13,4,5,6,7,8,9,10,11,14)]
+data.final
 ```
 
 \pagebreak
@@ -239,9 +246,59 @@ The reason why we did not gather data from the database [Clio Infra](https://www
 * PUBLIC TRANSPORTS
 * PURCHASE OF CARS
 
-##Cleaning and merging of datasets
+##Cleaning, processing and merging of datasets
 After importing data on R and cleaning them, we merged the datasets. The final dataset has nineteen observations, and eleven variables, observed throughout the years 1995 - 2014. 
 
+###########################################
 #Descriptive and inferential statistics
+##########################################
 
+# Creating a summary table
+```{r, echo = FALSE, message=FALSE, warning = FALSE, results = "asis"}
+
+# Creating nicer labels
+labels1 <- c("gdp per capita", "inequality", "top 10% income", "bottom 90% income", "number of cars", "number of rental cars", "number of taxis", "number of buses", "number of motorbikes", "other vehicles", "bus usage", "mrt usage", "lrt usage" )
+# Creating the table
+stargazer(data.final, type = "latex",
+         title = "General data summary", lable = "labels1",
+        digits = 1, out = "General data summary.tex")
+```
+
+```{r, echo = FALSE, message=FALSE, warning = FALSE}
+# Creating first figure: trend in gdp, bottom 90% and top 10% average income
+fig.1 <- ggplot2::ggplot(data.final, aes(x=data.final$date)) + 
+  geom_line(aes(y=data.final$top, color="top")) + 
+  geom_line(aes(y=data.final$bottom, color="bottom")) + 
+  geom_line(aes(y=data.final$gdp.per.capita, color="gdp.per.capita")) + theme_light()
+fig.1
+```
+
+```{r, echo = FALSE, message=FALSE, warning = FALSE}
+# Creating the second figure: trend in inequality in number of times. 
+fig.2 <- ggplot2::ggplot(data.final, aes(x=data.final$date, y=data.final$inequality)) + geom_line() + theme_classic()
+fig.2
+```
+
+```{r, echo = FALSE, message=FALSE, warning = FALSE}
+# Creating the third figure: trend in number of vehicles           
+fig.3 <- ggplot2::ggplot(data.final, aes(x=data.final$date)) + 
+  geom_line(aes(y=data.final$cars, color="cars")) + 
+  geom_line(aes(y=data.final$rentalcars, color="rental cars")) + 
+  geom_line(aes(y=data.final$taxis, color="taxis")) +
+  geom_line(aes(y=data.final$buses, color="buses")) +
+  geom_line(aes(y=data.final$motorbikes, color="motorbikes")) + theme_light()
+fig.3
+```
+
+```{r, echo = FALSE, message=FALSE, warning = FALSE}
+# Creating the fourth figure: trend in vehicles utilization           
+fig.4 <- ggplot2::ggplot(data.final, aes(x=data.final$date)) + 
+  geom_line(aes(y=data.final$bus.u, color="buses")) + 
+  geom_line(aes(y=data.final$mrt.u, color="MRT")) + 
+  geom_line(aes(y=data.final$lrt.u, color="LRT")) + theme_light()
+fig.4
+```
+
+
+# Creating a trend graph for ineauqlity and GDP
 #References
