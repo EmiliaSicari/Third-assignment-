@@ -152,30 +152,63 @@ car.pop1.buses <- data.frame(subset(car.pop1, type == "Buses"))
 car.pop1.motorbikes <- data.frame(subset(car.pop1, type == "Motorcycles & Scooters"))
 car.pop1.other <- data.frame(subset(car.pop1, type == "Goods & Other Vehicles"))
 
+#changing name of the column "year" into "date"
+names(car.pop1.rentalcars) <- c("date", "type", "number")
+
 #merging inequality and gdp per capita dataframes
+gdp.ineq <- merge(gdp.pc, inequality.complete, by ='date')
+#eliminating the extra year (2015) in order to proceed with merging with the other data frames
+gdp.ineq1 <- data.frame(subset(gdp.ineq, date<"2015"))
+
+#merging gdp.ineq dataframe with all the other dataframes, and cleaning meanwhile
+#merging with cars and cleaning
+dataframe1 <- merge (gdp.ineq1, car.pop1.cars, by ='date')
+dataframe1$type <- NULL
+names(dataframe1) <- c("date", "gdp.per.capita", "inequality", "cars")
+#merging with rentalcars and cleaning
+dataframe2 <- merge (dataframe1, car.pop1.rentalcars, by ='date')
+dataframe2$type <- NULL
+names(dataframe2) <- c("date", "gdp.per.capita", "inequality", "cars", "rentalcars")
+#merging with taxis and cleaning
+dataframe3 <- merge (dataframe2,car.pop1.taxis, by ='date')
+dataframe3$type <- NULL
+names(dataframe3) <- c("date", "gdp.per.capita", "inequality", "cars", "rentalcars", "taxis")
+#merging with buses and cleaning
+dataframe4 <- merge (dataframe3, car.pop1.buses, by ='date')
+dataframe4$type <- NULL
+names(dataframe4) <- c("date", "gdp.per.capita", "inequality", "cars", "rentalcars", "taxis", "buses")
+#merging with motorbikes and cleaning
+dataframe5 <- merge (dataframe4, car.pop1.motorbikes, by ='date')
+dataframe5$type <- NULL
+names(dataframe5) <- c("date", "gdp.per.capita", "inequality", "cars", "rentalcars", "taxis", "buses", "motorbikes")
+#creating the final, complete dataframe and cleaning it
+complete.dataframe <- merge (dataframe5, car.pop1.other, by ='date')
+complete.dataframe$type <- NULL
+names(complete.dataframe) <- c("date", "gdp.per.capita", "inequality", "cars", "rentalcars", "taxis", "buses", "motorbikes", "other")
+ 
 ```
 
 \pagebreak
 
 #Research question and project description
-In our collaborative research project, we seeks to provide an answer to the following question: **How the rise in the rise in inequality and economic growth influences the purchase of luxury goods, particularly cars, and the usage of public transportation systems in Singapore, from 1960 to 2015**. 
-Therefore, we collected data on economic growth, income inequality, usage of public transports and purchase of cars covering the time span of 29 years, from 1980 until 2009. As suggested by our research question, economic growth, income inequality and usage of public transports are the explanatory variables, while purchase of cars is the dependent variable. The reason why we chose cars as example of luxury goods showing social status, is that in Singapore purchasing of cars is particularly expensive, due to high taxation and a certificate of car entitlement, whose cost can be higher than 70.000 dollars. For more details about the research proposal and case justification see [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal).
+In our collaborative research project, we seeks to provide an answer to the following question: **How the rise in the rise in inequality and economic growth influences the purchase of luxury goods, particularly cars, and the usage of public transportation systems in Singapore, from 1995 to 2014**. 
+Therefore, we collected data on economic growth, income inequality, usage of public transports and purchase of cars covering the time span of 29 years, from 1995 until 2014 As suggested by our research question, economic growth, income inequality and usage of public transports are the explanatory variables, while purchase of cars is the dependent variable. The reason why we chose cars as example of luxury goods showing social status, is that in Singapore purchasing of cars is particularly expensive, due to high taxation and a certificate of car entitlement, whose cost can be higher than 70.000 dollars. For more details about the research proposal and case justification see [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal).
 
 #Processing data
 
 ##Data sources and data gathering
 The data that we need for our empirical analysis are to be retrieved from different sources:
 
-* IMF Cross Country Macroeconomic Statistics open data, containing cross-country marcoeconomic data.From this source we downloaded the dataset on Singapore GDP per Capita at Current Prices measured in national currency from 1995 until 2015 . Data were downloaded in csv format from [Quandl](https://www.quandl.com/data/ODA/SGP_NGDPPC), a website providing high-quality financial and economic data in different formats to facilitate data analysis.
+* IMF Cross Country Macroeconomic Statistics open data, containing cross-country marcoeconomic data.From this source we downloaded the dataset on Singapore GDP per Capita at Current Prices measured in national currency from 1995 until 2014. Data were downloaded in csv format from [Quandl](https://www.quandl.com/data/ODA/SGP_NGDPPC), a website providing high-quality financial and economic data in different formats to facilitate data analysis.
 
-* [Knoema](http://knoema.com/), a knowledge platform connecting data with analytical and presentation tools, in order to allow users to access, present and share data-driven content. From  The World Top Incomes Database - providing access to data on the distribution of top incomes in more than twenty five countries across the globe - we downloaded data on the top 10% average income and bottom 90% average income in Singapore, to be compared in order to understand how many times the top 10% average income is higher than the bottom 90%. Since data were available only until 2009, the values of bottom 90% and top 10% average income between 2010 and 2015 were forcated with a linear regression. 
+* [Knoema](http://knoema.com/), a knowledge platform connecting data with analytical and presentation tools, in order to allow users to access, present and share data-driven content. From  The World Top Incomes Database - providing access to data on the distribution of top incomes in more than twenty five countries across the globe - we downloaded data on the top 10% average income and bottom 90% average income in Singapore, to be compared in order to understand how many times the top 10% average income is higher than the bottom 90%. Since data were available only until 2009, the values of bottom 90% and top 10% average income between 2010 and 2014 were forcated with a linear regression. 
 The reason why we did not gather data from the database [Clio Infra](https://www.quandl.com/data/CLIO/SGP_II-Income-Inequality-Singapore) available on Quandl as we had defined in our [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal) , is that it did not provide sufficient data for the time span we are considering. 
 
 * PUBLIC TRANSPORTS
 * PURCHASE OF CARS
 
 ##Cleaning and merging of datasets
-After importing data on R and cleaning them, we merged the datasets. The final dataset has TOT observations....
+After importing data on R and cleaning them, we merged the datasets. The final dataset has twenty observations, and eight variable, observed throughout the years 1995 - 2014. 
 
 #Descriptive and inferential statistics
 
