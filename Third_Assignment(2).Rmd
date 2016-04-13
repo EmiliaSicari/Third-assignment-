@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #setting working directory
 getwd()
-try(setwd('/Users/emiliasicari/Desktop/Third-assignment-'), silent = TRUE)
+try(setwd('/Users/emiliasicari/Desktop/Third_assignment-'), silent = TRUE)
 try(setwd("/Users/rafalopezv/Dropbox/R/Third-assignment/"), silent = TRUE)
 
 #loading packages or installing them if not already available
@@ -46,7 +46,7 @@ gdp.pc[,c(2,1)]
 sapply(gdp.pc, class)
 
 #importing data on Singapore's bottom 90% average income, selecting only the time span of interest
-bottom <- read.csv('/Users/emiliasicari/Desktop/Third-assignment-/ObservationData_zqpldgb.csv', header = TRUE, skip = 20)
+bottom <- read.csv('/Users/emiliasicari/Desktop/Third_assignment/ObservationData_zqpldgb.csv', header = TRUE, skip = 20)
 #erasing columns
 bottom$Singapore <- NULL
 bottom$Bottom.90..average.income <- NULL
@@ -74,7 +74,7 @@ new.bottom #visualising the new dataframe
 bottom.complete <- rbind(bottom, new.bottom)
 
 #importing data on Singapore's top 10% average income, selecting only the time span of interest
-top <-read.csv('/Users/emiliasicari/Desktop/Third-assignment-/ObservationData_rblkfmd.csv', header = TRUE, skip = 20)
+top <-read.csv('/Users/emiliasicari/Desktop/Third_assignment/ObservationData_rblkfmd.csv', header = TRUE, skip = 20)
 #erasing columns
 top$Singapore <- NULL
 top$Top.10..average.income <- NULL
