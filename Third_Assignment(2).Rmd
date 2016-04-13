@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #setting working directory
 getwd()
-try(setwd('/Users/emiliasicari/Desktop/Third_assignment-'), silent = TRUE)
+try(setwd('/Users/emiliasicari/Desktop/Third_assignment'), silent = TRUE)
 try(setwd("/Users/rafalopezv/Dropbox/R/Third-assignment/"), silent = TRUE)
 
 #loading packages or installing them if not already available
