@@ -107,7 +107,7 @@ a <- "https://data.gov.sg/dataset/7f0661dc-6e4f-460f-8e8c-3514c9a8cb6b/resource/
 trans.ut <- repmis::source_data(a)
 
 #Changing the name of the colums 
-names(trans.ut) <- c("year","type","average.1000.day")
+names(trans.ut) <- c("date","type","average.1000.day")
 
 #Checking the class of the data
 sapply(trans.ut, class)
@@ -118,16 +118,22 @@ trans.ut.bus <- data.frame(subset(trans.ut, type == "Bus"))
 trans.ut.lrt <- data.frame(subset(trans.ut, type == "LRT"))
 trans.ut.taxi <- data.frame(subset(trans.ut, type == "Taxi"))
 
+# Completing the missing data for the trans.ut.lrt data frame
+trans.ut.lrt1 <- data.frame(date = c(1995,1996,1997,1998), type = c("LRT", "LRT","LRT", "LRT"), average.1000.day = c(0,0,0,0))
+
+# Binding data sets: trans.ut.lrt and trans.ut.lrt1  
+trans.ut.lrt2 <- rbind(trans.ut.lrt, trans.ut.lrt1)
+trans.ut.lrt2
 #Downloading data for car population (from 1965 to 2015)
 b <- "https://data.gov.sg/dataset/e2673131-f79f-43e3-9579-c17cc25e1735/resource/31ca0cee-6d9e-453a-8b4f-376d37713a10/download/motor-vehicle-population-by-type-of-vehicle-end-of-period-annual.csv"
 car.pop <- repmis::source_data(b)
 
 #Changing the name of the colums
-names(car.pop) <- c("year", "type", "number")
+names(car.pop) <- c("date", "type", "number")
 
 # Eliminating the years that are not compatible with the other data sets
-car.pop1 <- data.frame(subset(car.pop, year > "1994"))
-mean(car.pop1$number)
+car.pop1 <- data.frame(subset(car.pop, date > "1994"))
+car.pop1 <- data.frame(subset(car.pop1, date < "2015"))
 
 #Checking the class of the data
 sapply(car.pop1, class)
