@@ -29,7 +29,7 @@ library(data.table)
 library(rio)
 library(ggplot2)
 library(stargazer)
-
+library(knitr)
 # creating an object of the packages for citation purposes
 packages <- c('devtools', 'repmis', 'Quandl', 'data.table', 'rio', 'ggplot2', 'stargazer')
 repmis::LoadandCite(packages, file = 'packages.bib')
@@ -225,6 +225,10 @@ data.final <- merge (data.final4, trans.ut.lrt2, by ='date')
 # Moving the columns
 data.final[,c(1,2,3,12,13,4,5,6,7,8,9,10,11,14)]
 data.final
+
+# Exporting the final data frame as csv file
+rio::export(data.final, "final.data.frame.csv", col.names = TRUE)
+
 ```
 
 \pagebreak
@@ -258,11 +262,16 @@ After importing data on R and cleaned them, using the "year" as common demonitat
 * USAGE OF PT
 
 After cleaning the datasets, we proceeded with merging them. However, the various datasets were merged one by one, since more cleaning was sometimes needed in order to avoid merging problems. The final dataframe has 19 observations and 14 variables, observed throughout the years 1995-2014.
-(INSERTING TABLE?)
+
+TABLE
+```{r, echo = FALSE, message=FALSE, warning = FALSE, out.width=2}
+kable(data.final)
+```
 
 #Descriptive and inferential statistics
 
-# Creating a summary table
+## Creating a summary table
+
 The table below shows the basic decriptive statistics for our variable included in the complete datasets. 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE, results = "asis"}
 
@@ -283,7 +292,10 @@ The following graph shows the trend of the three explanatory variables, througho
 fig.1 <- ggplot2::ggplot(data.final, aes(x=data.final$date)) + 
   geom_line(aes(y=data.final$top, color="top")) + 
   geom_line(aes(y=data.final$bottom, color="bottom")) + 
-  geom_line(aes(y=data.final$gdp.per.capita, color="gdp.per.capita")) + theme_light()
+  geom_line(aes(y=data.final$gdp.per.capita, color="gdp.per.capita")) + 
+  theme_light() + geom_point(aes(y=data.final$top))
+fig.1
+fig.1<-fig.1 + labs(x = "years", y = "gdp, top 10% income and bottom 90% income in dollars")
 fig.1
 ```
 
@@ -313,6 +325,22 @@ fig.4 <- ggplot2::ggplot(data.final, aes(x=data.final$date)) +
 fig.4
 ```
 
+## Multiple regression analysis
 
-# Creating a trend graph for ineauqlity and GDP
+```{r, echo = FALSE, message=FALSE, warning = FALSE}
+# Creating the firts model
+m1 <- lm(cars ~ gdp.per.capita + inequality + bus.u + mrt.u + lrt.u, data = data.final)
+m2 <- lm(bus.u ~ gdp.per.capita + inequality, data = data.final)
+m3 <- lm(mrt.u ~ gdp.per.capita + inequality, data = data.final)
+m4 <- lm(buses ~ gdp.per.capita + inequality + bus.u + mrt.u + lrt.u,data = data.final)
+```
+
+```{r, echo = FALSE, message=FALSE, warning = FALSE}
+# Creating a table of the models with stargazer
+stargazer::stargazer(m1, m2, m3, m4,  
+    title = 'Multiple regeression models',
+    digits = 2, type = 'latex', header =  FALSE)
+```
+
+
 #References
