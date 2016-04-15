@@ -3,13 +3,13 @@ title: "Third Assignment"
 author: "Emilia Sicari & Rafael Lopez V."
 date: "March 25, 2016"
 output:
-  html_document:
-    toc: yes
-    toc_depth: '2'
   pdf_document:
     number_sections: yes
     toc: yes
     toc_depth: 2
+  html_document:
+    toc: yes
+    toc_depth: '2'
 subtitle: Christopher Gandrud, Hertie School of Governance, Spring 2016
 bibliography: packages.bib
 ---
@@ -29,11 +29,12 @@ library(data.table)
 library(rio)
 library(ggplot2)
 library(stargazer)
+library(pander)
 library(knitr)
 library(scales)
 
 # creating an object of the packages for citation purposes
-packages <- c('devtools', 'repmis', 'Quandl', 'data.table', 'rio', 'ggplot2', 'stargazer')
+packages <- c('devtools', 'repmis', 'Quandl', 'data.table', 'rio', 'ggplot2', 'stargazer', 'pander', 'Scale')
 repmis::LoadandCite(packages, file = 'packages.bib')
 
 # importing data on Singapore's economic growth, selecting only the time span of interest
@@ -234,27 +235,51 @@ rio::export(data.final, "final.data.frame.csv", col.names = TRUE)
 ```
 
 \pagebreak
-
 #Research question and project description
-In our collaborative research project, we seeks to provide an answer to the following question: **How the rise in inequality and economic growth influences the purchase of cars as an example of luxury good, compared to the usage of public transportation systems in Singapore, from 1995 to 2014**. 
-Therefore, we collected data on economic growth, income inequality, usage of public transports and purchase of cars covering the time span of 29 years, from 1995 until 2014. As suggested by our research question, economic growth, income inequality are the explanatory variables, while purchase of cars and usage of public transports are the dependent variables. The reason why we chose cars as example of luxury goods showing social status, is that in Singapore purchasing of cars is particularly expensive, due to high taxation and a certificate of car entitlement, whose cost can be higher than 70.000 dollars. For more details about the research proposal and case justification see [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal).
+In our collaborative research project, we seeks to provide an answer to the following question: **How the rise in inequality and economic growth influences the purchase of cars as an example of luxury goods, compared to the usage of public transportation systems in Singapore, from 1995 to 2014**. 
+
+Therefore, we collected data on economic growth, income inequality, usage of public transports and purchase of cars covering the time span of 19 years, from 1995 until 2014. As suggested by our research question, economic growth, income inequality are the explanatory variables, while purchase of cars and usage of public transports are the dependent variables. The reason why we chose cars as example of luxury goods showing social status, is that in Singapore purchasing of cars is particularly expensive, due to high taxation and a certificate of car entitlement, whose cost can be higher than 70.000 dollars. For more details about the research proposal and case justification see [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal).
 
 #Processing data
 
 ##Data sources and data gathering
-The data that we need for our empirical analysis are to be retrieved from different sources:
+The data that we need for our empirical analysis were retrieved from:
 
-* IMF Cross Country Macroeconomic Statistics open data available on [Quandl](https://www.quandl.com/data/ODA/SGP_NGDPPC), a website providing high-quality financial and economic data in different formats to facilitate data analysis. From this source we downloaded data showing the trend in Singopore's GDP per capita imported on R in csv format. 
+* IMF Cross Country Macroeconomic Statistics open data available on [Quandl](https://www.quandl.com/data/ODA/SGP_NGDPPC) From this source we downloaded data showing the trend in Singopore's GDP per capita meassured in singaporean dollars from 1995 to 2014. The data was provided in csv format.  
 
-* [Knoema](http://knoema.com/), a knowledge platform connecting data with analytical and presentation tools, in order to allow users to access, present and share data-driven content. From The World Top Incomes Database - providing access to data on the distribution of top incomes in more than twenty five countries across the globe - we downloaded data on the top 10% average income and bottom 90% average income in Singapore. The reason why we did not gather data from the database [Clio Infra](https://www.quandl.com/data/CLIO/SGP_II-Income-Inequality-Singapore) available on Quandl as we had defined in our [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal) , is that it did not provide sufficient data for the time span we are considering. 
+* [Knoema](http://knoema.com/). From The World Top Incomes Database - providing access to data on the distribution of top incomes in more than twenty five countries across the globe - we downloaded data on the top 10% average income and bottom 90% average income in Singapore, meassured in singaporean dollars. The reason why we did not gather data from the database [Clio Infra](https://www.quandl.com/data/CLIO/SGP_II-Income-Inequality-Singapore) available on Quandl as we had defined in our [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal) , is that it did not provide sufficient data for the time span we are considering. Since it was not possible to directly download the data base to R we requested the data, which have been sent via e-mail in csv format. This data is part of the repository.  
+
+* [Singapore's open data portal](https://data.gov.sg). This portal offered two data bases: 
+    + [Annual Motor Vehicle Population](https://data.gov.sg/dataset/annual-motor-vehicle-population-by-type-of-vehicles). The data provides the number of cars from 1995 to 2014, including: mortorbikes, rental cars, buses, taxis and other type of vehicles. The last two are considered public cars since in Singapore even the taxis are provided by the state.
+    
+    + [Public transport utilization](https://data.gov.sg/dataset/public-transport-utilisation-average-public-transport-ridership). This data is expressed as the daily average of thounsand commuters using public trasport by year. It covers the span from 1995 to 2014 and includes the following modes of transportation: MRT (underground), LRT (similar to the Berlin S-Bahn), Taxis (publicly run), Buses.
+    
+The following table summarizes the variables downloaded.
+
+```{r, echo = FALSE, message=FALSE, warning = FALSE, results='asis'}
+# Creating the summary table stated before
+Variable <- c("gdp per capita","inequality","anual motor vehicle","public transport utilization")
+Description <- c("measured in singaporean dollars at current prices. From 1995 to 2014", "top 10% and bottom 90% singaporean's average income measured in singaporean dollars", "number of: cars, rental cars, buses, taxis, buses, motorbikes", "average commuters using daily: MRT, LRT, Buses, Taxis")  
+Time.frame <- c("1980-2014", "1947-2009", "1960-2015", "1995-2014")
+data.table <- data.frame(Variable, Description, Time.frame)
+pander::pander(data.table, split.cells = 30, split.table = Inf, style = "grid")
+```
 
 ##Cleaning, processing and merging of datasets
-After importing data on R and cleaned them, using the "year" as common demonitator for every dataframe, in order to merge them afterwards. 
 
-* Singapore's GDP per capita is measured in national currency and at current prices. We selected only the time span of interest and and removed the unnecessary columns, to avoid later merging conflicts.
-* As for data on bottom 90% and top 10% average income, data were considered starting from 1995. Since there were no data availble after 2009, we forecasted the value of the average income of the two categories performing a linear regression. Results were available in a new dataframe, which was then bound with the orginal one, in order to have the entire time series. After that, we used these data to create a new dataframe showing the trend in inequality from 1995 until 2014; these data were obtained dividing the values of the top 10% average by the values of the bottom 90% average income for each year, to show how many times the top 10% average income is higher than the bottom 90% throughout the considered period. 
-After cleaning the datasets, we proceeded with merging them. However, the various datasets were merged one by one, since more cleaning was sometimes needed in order to avoid merging problems. The final dataframe has 19 observations and 14 variables, observed throughout the years 1995-2014.
-```
+* After importing data we used the "date" variable (year) as a unique identifier for all four data sets, in order to merge them afterwards.
+
+* Since time frames of the data were different, we selected a common span of time: 1995-2014. In one case we had to make a linear regression to forecast mising values to complete the time common frame, and in other we completed the data with we abstent for some years with "0", since we new that the problem was not lack of data but inexistence of that variable in those years.
+
+* Cleaning the data was limited to changing column names, eliminating the unnecesary ones and organizing the data in multile data frames so to merge them more easily  afterwards. In one case we changed the format of the data from characters to integers, due to an incorrect import.
+
+* Data of inequality, namely bottom 90% and top 10% average income, were available only until 2009. Therefore, we forecasted the value of the average income of the two categories performing a linear regression. The results, available in a new dataframe, were later on bounded with the orginal one, in order to have the entire time series. 
+
+*After that, we used the once complete data on inequality to create a simplified inequality indicator. This consists on divididing the top 10% avereage income of singaporeans by the bottom 90% average income. Consequenltly, the coefficient of the division  shows how many times higher the top 10% average singaporean's income is in comparison with the bottom 90% income of the bottom population.  
+
+* For the number of cars we simply divided them into the categories provided in the data original set: cars, buses, etc. Originnaly they were in one column so we separate them in several ones to have the year as a unique identifier. Afterwards, we merged all the individual data frames in the new data frame shape.  
+
+* For the utilization of transport public we only added the value of 0 to the LRT category from 1995 to 1998, This allowed us to complete the data set. 
 
 #Descriptive and inferential statistics
 
@@ -418,6 +443,8 @@ stargazer::stargazer(m1, m2, m3, m4,
 #References
 
 \pagebreak
+#Annex
+## Annex 1: Final data set containing all the variables and observations
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
-
+pander::pander(data.final, split.cells = 70, split.table = Inf, style = "grid")
 ```
