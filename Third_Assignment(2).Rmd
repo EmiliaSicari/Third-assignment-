@@ -3,13 +3,13 @@ title: "Third Assignment"
 author: "Emilia Sicari & Rafael Lopez V."
 date: "March 25, 2016"
 output:
+  html_document:
+    toc: yes
+    toc_depth: '2'
   pdf_document:
     number_sections: yes
     toc: yes
     toc_depth: 2
-  html_document:
-    toc: yes
-    toc_depth: '2'
 subtitle: Christopher Gandrud, Hertie School of Governance, Spring 2016
 bibliography: packages.bib
 ---
@@ -30,6 +30,8 @@ library(rio)
 library(ggplot2)
 library(stargazer)
 library(knitr)
+library(scales)
+
 # creating an object of the packages for citation purposes
 packages <- c('devtools', 'repmis', 'Quandl', 'data.table', 'rio', 'ggplot2', 'stargazer')
 repmis::LoadandCite(packages, file = 'packages.bib')
@@ -242,30 +244,16 @@ Therefore, we collected data on economic growth, income inequality, usage of pub
 ##Data sources and data gathering
 The data that we need for our empirical analysis are to be retrieved from different sources:
 
-* IMF Cross Country Macroeconomic Statistics open data available on [Quandl](https://www.quandl.com/data/ODA/SGP_NGDPPC), a website providing high-quality financial and economic data in different formats to facilitate data analysis. From this source we downloaded data showing the trend in Singopore's GDP per capita imported on R in csv format  
+* IMF Cross Country Macroeconomic Statistics open data available on [Quandl](https://www.quandl.com/data/ODA/SGP_NGDPPC), a website providing high-quality financial and economic data in different formats to facilitate data analysis. From this source we downloaded data showing the trend in Singopore's GDP per capita imported on R in csv format. 
 
 * [Knoema](http://knoema.com/), a knowledge platform connecting data with analytical and presentation tools, in order to allow users to access, present and share data-driven content. From The World Top Incomes Database - providing access to data on the distribution of top incomes in more than twenty five countries across the globe - we downloaded data on the top 10% average income and bottom 90% average income in Singapore. The reason why we did not gather data from the database [Clio Infra](https://www.quandl.com/data/CLIO/SGP_II-Income-Inequality-Singapore) available on Quandl as we had defined in our [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal) , is that it did not provide sufficient data for the time span we are considering. 
-
-* POPULATION OF VEHICLES 
-
-* USAGE OF PT
 
 ##Cleaning, processing and merging of datasets
 After importing data on R and cleaned them, using the "year" as common demonitator for every dataframe, in order to merge them afterwards. 
 
-* Singapore's GDP per capita is measured in national currency and at current prices. We selected only the time span of interest and and removed the unnecessary columns, to avoid later merging conflicts. 
-
+* Singapore's GDP per capita is measured in national currency and at current prices. We selected only the time span of interest and and removed the unnecessary columns, to avoid later merging conflicts.
 * As for data on bottom 90% and top 10% average income, data were considered starting from 1995. Since there were no data availble after 2009, we forecasted the value of the average income of the two categories performing a linear regression. Results were available in a new dataframe, which was then bound with the orginal one, in order to have the entire time series. After that, we used these data to create a new dataframe showing the trend in inequality from 1995 until 2014; these data were obtained dividing the values of the top 10% average by the values of the bottom 90% average income for each year, to show how many times the top 10% average income is higher than the bottom 90% throughout the considered period. 
-
-* POPULATION OF VEHICLES 
-
-* USAGE OF PT
-
 After cleaning the datasets, we proceeded with merging them. However, the various datasets were merged one by one, since more cleaning was sometimes needed in order to avoid merging problems. The final dataframe has 19 observations and 14 variables, observed throughout the years 1995-2014.
-
-TABLE
-```{r, echo = FALSE, message=FALSE, warning = FALSE, out.width=2}
-kable(data.final)
 ```
 
 #Descriptive and inferential statistics
@@ -286,42 +274,126 @@ stargazer(data.final, type = "latex",
 ##Trends in gdp per capita, bottom 90% and top 10% average income
 The following graph shows the trend of the three explanatory variables, throughout the period of time taken into consideration in Singapore. As we can see, 
 
-
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
 # Creating first figure: trend in gdp, bottom 90% and top 10% average income
 fig.1 <- ggplot2::ggplot(data.final, aes(x=data.final$date)) + 
   geom_line(aes(y=data.final$top, color="top")) + 
   geom_line(aes(y=data.final$bottom, color="bottom")) + 
   geom_line(aes(y=data.final$gdp.per.capita, color="gdp.per.capita")) + 
-  theme_light() + geom_point(aes(y=data.final$top))
-fig.1
-fig.1<-fig.1 + labs(x = "years", y = "gdp, top 10% income and bottom 90% income in dollars")
+  theme_light()
+
+#changing the name of the variables in the y axis
+fig.1<-fig.1 + labs(x = "years", y = NULL)
+
+#changing the position of the legend 
+fig.1 <- fig.1 + theme(legend.position="bottom")
+
+#changing the name of title and labels of legend
+fig.1 <- fig.1 + scale_colour_discrete(name= NULL,
+                         breaks=c("bottom", "gdp.per.capita", "top"),
+                         labels=c("Bottom 90% average income", "Gdp per capita", "Top 10% average income"))
+
+#changing the colour of the background of the plot
+fig.1 <- fig.1 + theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line.x = element_line(size = 0.25, linetype = "solid",
+                                   colour = "black"), 
+          axis.line.y = element_line(size = 0.25, linetype = "solid",
+                                   colour = "black"))
+#giving a title to the graph
+fig.1 <- fig.1 + ggtitle("Figure 1 - Gdp per capita, top 10% and bottom 90% average income\n
+in Singapore measured in national currency at current prices (1995-2014)") + theme(plot.title = element_text(lineheight=0.5, size = 10))
+
 fig.1
 ```
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
-# Creating the second figure: trend in inequality in number of times. 
-fig.2 <- ggplot2::ggplot(data.final, aes(x=data.final$date, y=data.final$inequality)) + geom_line() + geom_smooth() + theme_classic()
+#creating the second figure: trend in inequality in number of times. 
+fig.2 <- ggplot2::ggplot(data.final, aes(x=data.final$date, y=data.final$inequality)) + geom_line(aes(group=1), colour="#3399FF") + theme_classic()
+
+#changing the name of the variables in the y axis
+fig.2 <-fig.2 + labs(x = "years", y = "inequality")
+
+#changing the colour of the background of the plot
+fig.2 <- fig.2 + theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line.x = element_line(size = 0.25, linetype = "solid",
+                                   colour = "black"), 
+          axis.line.y = element_line(size = 0.25, linetype = "solid",
+                                   colour = "black"))
+                                   
+#giving a title to the graph
+fig.2 <- fig.2 + ggtitle("Figure 2 - Inequality in Singapore measured by the difference between \n the top 10% and bottom 90% average income in number of times (1995-2014)") + theme(plot.title = element_text(lineheight=1, size = 10))
+
 fig.2
 ```
 
-```{r, echo = FALSE, message=FALSE, warning = FALSE}
-# Creating the third figure: trend in number of vehicles           
+``````{r, echo = FALSE, message=FALSE, warning = FALSE}
+#creating the third figure: trend in number of vehicles      
 fig.3 <- ggplot2::ggplot(data.final, aes(x=data.final$date)) + 
   geom_line(aes(y=data.final$cars, color="cars")) + 
   geom_line(aes(y=data.final$rentalcars, color="rental cars")) + 
   geom_line(aes(y=data.final$taxis, color="taxis")) +
   geom_line(aes(y=data.final$buses, color="buses")) +
-  geom_line(aes(y=data.final$motorbikes, color="motorbikes")) + theme_light()
-fig.3
+  geom_line(aes(y=data.final$motorbikes, color="motorbikes")) + 
+  theme_classic()
+
+#changing the name of the variables in the y axis
+fig.3 <- fig.3 + labs(x = "years", y = NULL)
+
+#changing the position of the legend 
+fig.3 <- fig.3 + theme(legend.position="bottom")
+
+#changing the name of title and labels of legend
+fig.3 <- fig.3 + scale_colour_discrete(name= NULL,
+                                       breaks=c("buses", "cars", "motorbikes", "rental cars", "taxis"),
+                                       labels=c("buses", "cars", "motorbikes", "rental cars", "taxis"))
+
+#changing the colour of the background of the plot
+fig.3 <- fig.3 + theme(panel.border = element_blank(),
+                       panel.grid.major = element_blank(),
+                       panel.grid.minor = element_blank(),
+                       axis.line.x = element_line(size = 0.25, linetype = "solid",
+                                                  colour = "black"), 
+                       axis.line.y = element_line(size = 0.25, linetype = "solid",
+                                                  colour = "black"))
+#giving a title to the graph 
+fig.3 <- fig.3 + ggtitle("Figure 3 - Number of public and private vehicles in Singapore (1995-2014)") + theme(plot.title = element_text(lineheight=1, size = 10))
+
+#changing the scale of the y axis
+fig.3 <- fig.3 + scale_y_continuous(name= NULL, labels = comma)
+
+fig.3                                  
 ```
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
-# Creating the fourth figure: trend in vehicles utilization           
+#creating the fourth figure: trend in vehicles utilization           
 fig.4 <- ggplot2::ggplot(data.final, aes(x=data.final$date)) + 
   geom_line(aes(y=data.final$bus.u, color="buses")) + 
   geom_line(aes(y=data.final$mrt.u, color="MRT")) + 
   geom_line(aes(y=data.final$lrt.u, color="LRT")) + theme_light()
+
+#changing the name of the variables in the y axis
+fig.4 <-fig.4 + labs(x = "years", y = NULL)
+
+#changing the colour of the background of the plot
+fig.4 <- fig.4 + theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line.x = element_line(size = 0.25, linetype = "solid",
+                                   colour = "black"), 
+          axis.line.y = element_line(size = 0.25, linetype = "solid",
+                                   colour = "black"))
+##changing the position of the legend 
+fig.4 <- fig.4 + theme(legend.position="bottom")
+
+#changing the name of title and labels of legend
+fig.4 <- fig.4 + scale_colour_discrete(name= NULL,
+                         breaks=c("buses", "LRT", "MRT"),
+                         labels=c("buses", "MRT", "LRT"))
+fig.4 <- fig.4 + ggtitle("Figure 4 - Average daily passengers on public transports in Singapore \n in thousands (1995-2014)") + theme(plot.title = element_text(lineheight=1, size = 10))
 fig.4
 ```
 
@@ -344,3 +416,8 @@ stargazer::stargazer(m1, m2, m3, m4,
 
 
 #References
+
+\pagebreak
+```{r, echo = FALSE, message=FALSE, warning = FALSE}
+
+```
