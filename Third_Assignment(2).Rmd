@@ -301,7 +301,7 @@ fig.1
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
 # Creating the second figure: trend in inequality in number of times. 
-fig.2 <- ggplot2::ggplot(data.final, aes(x=data.final$date, y=data.final$inequality)) + geom_line() + theme_classic()
+fig.2 <- ggplot2::ggplot(data.final, aes(x=data.final$date, y=data.final$inequality)) + geom_line() + geom_smooth() + theme_classic()
 fig.2
 ```
 
