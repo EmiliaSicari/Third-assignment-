@@ -31,10 +31,10 @@ library(ggplot2)
 library(stargazer)
 library(pander)
 library(knitr)
-library(scales)
+library(corrplot)
 
 # creating an object of the packages for citation purposes
-packages <- c('devtools', 'repmis', 'Quandl', 'data.table', 'rio', 'ggplot2', 'stargazer', 'pander', 'Scale')
+packages <- c('devtools', 'repmis', 'Quandl', 'data.table', 'rio', 'ggplot2', 'stargazer', 'pander', 'corrplot')
 repmis::LoadandCite(packages, file = 'packages.bib')
 
 # importing data on Singapore's economic growth, selecting only the time span of interest
@@ -288,11 +288,15 @@ pander::pander(data.table, split.cells = 30, split.table = Inf, style = "grid")
 The table below shows the basic decriptive statistics for our variable included in the complete datasets. 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE, results = "asis"}
 
+#Creating a new data frame without date for summary purposes
+data.final.s <- data.final
+data.final.s$date <- NULL 
+
 # Creating nicer labels
 labels1 <- c("gdp per capita", "inequality", "top 10% income", "bottom 90% income", "number of cars", "number of rental cars", "number of taxis", "number of buses", "number of motorbikes", "other vehicles", "bus usage", "mrt usage", "lrt usage" )
 # Creating the table
-stargazer(data.final, type = "latex",
-         title = "General data summary", lable = "labels1",
+stargazer(data.final.s, type = "latex",
+         title = "General data summary", label = "labels1",
         digits = 1, out = "General data summary.tex")
 ```
 
@@ -388,9 +392,9 @@ fig.3 <- fig.3 + theme(panel.border = element_blank(),
 fig.3 <- fig.3 + ggtitle("Figure 3 - Number of public and private vehicles in Singapore (1995-2014)") + theme(plot.title = element_text(lineheight=1, size = 10))
 
 #changing the scale of the y axis
-fig.3 <- fig.3 + scale_y_continuous(name= NULL, labels = comma)
+#fig.3 <- fig.3 + scale_y_continuous(name= NULL, labels = comma)
 
-fig.3                                  
+#fig.3                                  
 ```
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
@@ -422,6 +426,15 @@ fig.4 <- fig.4 + ggtitle("Figure 4 - Average daily passengers on public transpor
 fig.4
 ```
 
+# Coorelation analysis
+
+```{r, echo = FALSE, message=FALSE, warning = FALSE, include = FALSE}
+source("http://www.sthda.com/upload/rquery_cormat.r")
+rquery.cormat(data.final.s)
+
+
+```
+
 ## Multiple regression analysis
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
@@ -438,6 +451,7 @@ stargazer::stargazer(m1, m2, m3, m4,
     title = 'Multiple regeression models',
     digits = 2, type = 'latex', header =  FALSE)
 ```
+
 
 
 #References
