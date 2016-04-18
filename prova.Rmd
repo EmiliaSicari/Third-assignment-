@@ -239,14 +239,13 @@ data.final
 rio::export(data.final, "final.data.frame.csv", col.names = TRUE)
 
 ```
-
 \pagebreak
 
 # Research question and project description
 
-In our collaborative research project, we seeks to provide an answer to the following question: **How the rise in inequality, economic growth and usage of public transportations has influenced the purchase of cars (as an example of luxury good) in Singapore, from 1995 to 2014**. 
+In our collaborative research project, we seeks to provide an answer to the following question: **How the rise in inequality and economic growth influences the purchase of cars as an example of luxury goods, compared to the usage of public transportation systems in Singapore, from 1995 to 2014**. 
 
-Therefore, we collected data on economic growth, income inequality, usage of public transports and number of privately and publicly owned vehicles, between 1995 and 2014. As suggested by our research question, economic growth, income inequality and usage of public transportations are the explanatory varibales, while purchase of cars is the dependent variable. The reason why we chose cars, is thar they are an example of luxury goods with which wqealthy people can show their social status; in fact, in Singapore purchasing cars is particularly expensive, due to a certificate of car entitlement which may cost even more than 70.000 dollars. For more details about the research proposal and case justification see [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal).
+Therefore, we collected data on economic growth, income inequality, usage of public transports and purchase of cars covering the time span of 19 years, from 1995 until 2014. As suggested by our research question, economic growth and income inequality are the explanatory variables, while purchase of cars and usage of public transports are the dependent variables. The reason why we chose cars as example of luxury goods showing social status, is that in Singapore purchasing of cars is particularly expensive, due to high taxation and the need to own a certificate of car entitlement, whose cost can be higher than 70.000 dollars. For more details about the research proposal and case justification see [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal).
 
 # Processing data
 
@@ -267,19 +266,13 @@ The reason why we did not gather data from the database [Clio Infra](https://www
 The following table summarizes the variables taken into consideration for the analysis.
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE, results='asis'}
-
 # Creating the summary table stated before
 Variable <- c("gdp per capita","inequality","anual motor vehicle","public transport utilization")
-
 Description <- c("measured in singaporean dollars at current prices. From 1995 to 2014", "top 10% and bottom 90% singaporean's average income measured in singaporean dollars", "number of: cars, rental cars, buses, taxis, buses, motorbikes", "average commuters using daily: MRT, LRT, Buses, Taxis")  
-
 Time.frame <- c("1980-2014", "1947-2009", "1960-2015", "1995-2014")
-
 data.table <- data.frame(Variable, Description, Time.frame)
-
 pander::pander(data.table, split.cells = 30, split.table = Inf, style = "grid")
 ```
-
 ## Cleaning, processing and merging of datasets
 
 - After importing data we used the "date" variable (year) as a unique identifier for all four datasets, in order to merge them afterwards.
@@ -318,7 +311,6 @@ stargazer(data.final.s, type = "latex",
 ##Trends in gdp per capita and inequality
 
 The following graph shows the trend of the three explanatory variables in Singapore between 1995 and 2014. As we can see, although slowly, the gdp per capita has risen thourghout the whole period, despite a slight decline between 2002 and 2005 and a more serious reduction in the years of the financial crisis, between 2008 and 2010. The top 10% average income shows the same trend: a steady increase throughout the whole period (in 2014 its value was more than 100% higher than the initial one), with a slight decline between 2002 and 2005, and a more serios reduction in the years of the financial crisis. However, the value of the bottom 90% average income has barely changed, enlarging the difference between the richest and the poorest and showing that the increase in the gdp per capita has benefitted only the top earners at the expensed of the poorest.  
-
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
 
 # Creating first figure: trend in gdp, bottom 90% and top 10% average income
@@ -327,7 +319,6 @@ fig.1 <- ggplot2::ggplot(data.final, aes(x=data.final$date)) +
   geom_line(aes(y=data.final$bottom, color="bottom")) + 
   geom_line(aes(y=data.final$gdp.per.capita, color="gdp.per.capita")) + 
   theme_light()
-
 
 #changing the name of the variables in the y axis
 fig.1<-fig.1 + labs(x = "years", y = NULL)
@@ -354,8 +345,7 @@ in Singapore measured in national currency at current prices (1995-2014)") + the
 
 fig.1
 ```
-
-The growing difference between the top and bottom earners is clarified by the following graph, showing trend in inequality in Singapore, measured in number of times by which the top 10% earners are richer than those earning the bottom 90% average income. The graph confirms what already highlighted above: the difference between the rich and the poor has been increasing all the time, and the trend only reversed between 2002 and 2005 and beteen 2008 and 2010. 
+The growing difference between the top and bottom earners is clarified by the following graph, showing trend in inequality in Singapore, measured in number of times by which the top 10% earners are richer than those earning the bottom 90% average income. The graph confirms what already highlighted above: the difference between the rich and the poor has been increasing all the time, and the trend only reversed between 2002 and 2005 and beteen 2008 and 2010. +
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
 #creating the second figure: trend in inequality in number of times. 
@@ -378,7 +368,6 @@ fig.2 <- fig.2 + ggtitle("Figure 2 - Inequality in Singapore measured by the dif
 
 fig.2
 ```
-
 ##Trends in ownership and usage of vehicles
 
 The following graph shows the number of public and private vehicles present in Singapore between 1995 and 2015. What is striking, is the continuous and rapid increase in tge number of privately owned cars (especially since 2006):  in fact, in Singapore owing a car is particularly expensive, since not only cars are subjected to high taxation, but also the government requires car owners to purchase certificate of car entitlement, whose cost can be higher than 70.000 dollars. Therefore our first two hypotheses are verified: the higher the economic growth - measued by gdp per capita - and the higher the inequality, the higher the purchase of cars (for more details about the hypotheses see https://github.com/EmiliaSicari/ResearchProposal). A further assumption to be investigated is that such increase might be linked to the likewise rise in the top 10% average income: as the rich become richer, the purchase of luxury goods, such as cars, increases as well. 
@@ -424,7 +413,7 @@ fig.3
 At the same time, even the number of passengers in the main public transportation (MRT and buses) has increased consistenlty over time. Despite that, the publicly owned buses have not chaged in number, as shown in the previous graph. Consequently, the third hypotheses - the lower the usage of public transports,the the purchase of luxury cars - is falsified: in fact, usage of public transports has either increased (in the case of MRT and buses) or stayed the same (in the case of LRT), while the number of private cars has grown consistently. Even in this case a further assumption to be investigated is that those usign public transports are the lower earners. 
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
-#Creating the fourth figure: trend in vehicles utilization           
+#creating the fourth figure: trend in vehicles utilization           
 fig.4 <- ggplot2::ggplot(data.final, aes(x=data.final$date)) + 
   geom_line(aes(y=data.final$bus.u, color="buses")) + 
   geom_line(aes(y=data.final$mrt.u, color="MRT")) + 
@@ -455,7 +444,7 @@ fig.4
 # Coorelation analysis
 
 A first step to check out our new assumptions is to see the correlation between the variables included in the model, shown by the plot below: blue indicates negative correlation between variables, while red highlights positive correlations; color intensity and the size of the circles are proportional to the correlation coefficients, and the correlation coefficients corresponding to the color intensity are shown in the legend below the diagram. 
-What clearly emerges from the plot, is that the variables are in almost all of the cases highly and positively correlated to each other. Bottom 90% average income and buse utilization are less correlated to the other variables, and bottom 90% average income is also negatively correlated with both inequality and buses utilization (which weakens the assumption that the poorest are those who use more public transportations). However, high correlation among explanatory variables might create problems in multiple regression analysis (multicollinearity). Therefore, it is necessary to explore collinearity before proceeding to the regression analysis. 
+What clearly emerges from the plot, is that the variables are in almost all of the cases highly and positively correlated to each other. Bottom 90% average income and buse utilization are less correlated to the other variables, and bottom 90% average income is also negatively correlated with both inequality and buses utilization (which weakens the assumption that the poorest are those who use more public transportations). However, high correlation among explanatory variables might create problems in multiple regression analysis (multicollinearity). Therefore, it is necessary to explore collinearity before proceeding to the regression analysis.
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE, include = FALSE}
 data.final.c <- data.final.s
@@ -464,7 +453,7 @@ data.final.c
 source("http://www.sthda.com/upload/rquery_cormat.r")
 rquery.cormat(data.final.c)
 ```
- 
+
 ![Figure 5 - Correlation plot](/Users/emiliasicari/Desktop/Third_assignment/Correlation plot.png)
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE, include = TRUE}
@@ -477,17 +466,7 @@ knitr::kable(correlation, digits = 2)
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
 # Creating the firts model
 m1 <- lm(cars ~ gdp.per.capita + inequality + bus.u + mrt.u + lrt.u, data = data.final)
+m2 <- lm(bus.u ~ gdp.per.capita + inequality, data = data.final)
+m3 <- lm(mrt.u ~ gdp.per.capita + inequality, data = data.final)
+m4 <- lm(buses ~ gdp.per.capita + inequality + bus.u + mrt.u + lrt.u,data = data.final)
 ```
-
-```{r, echo = FALSE, message=FALSE, warning = FALSE, results="asis"}
-# Creating a table of the models with stargazer
-stargazer::stargazer(m1,
-    title = "Multiple regeression model", covariate.labels = "labels1", 
-    digits = 2, type = 'latex', header =  FALSE)
-```
-
-## Further steps
-- investigating collinearity
-
-# References
-
