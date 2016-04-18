@@ -42,12 +42,12 @@ packages <- c('devtools', 'repmis', 'Quandl', 'data.table', 'rio', 'ggplot2', 's
 repmis::LoadandCite(packages, file = 'packages.bib')
 
 # importing data on Singapore's economic growth, selecting only the time span of interest
-URL <- "https://www.quandl.com/api/v3/datasets/UNAE/GDPCDPC_SGP.csv?api_key=zKGy91t7cY2TmfwbfAwe"
+URL <- "https://www.quandl.com/api/v3/datasets/ODA/SGP_NGDPPC.csv?api_key=zKGy91t7cY2TmfwbfAwe"
 gdp.pc <- repmis::source_data(URL, header = TRUE, nrows=21, skip = 5)
 #adding a new column, and inserting content 
 gdp.pc["MY_NEW_COLUMN"] <- 2015:1995
 #erasing a column
-gdp.pc$`2009-12-31`<- NULL
+gdp.pc$`2017-12-31`<- NULL
 #changing the names of the columns
 names(gdp.pc) <- c("gdp per capita", "date")
 #changing order of columns
@@ -244,9 +244,9 @@ rio::export(data.final, "final.data.frame.csv", col.names = TRUE)
 
 # Research question and project description
 
-In our collaborative research project, we seeks to provide an answer to the following question: **How the rise in inequality, economic growth and usage of public transportations has influenced the purchase of cars (as an example of luxury good) in Singapore, from 1995 to 2014**. 
+**Research question: How the rise in inequality, economic growth and usage of public transportation influences the purchase of cars (as an example of luxury good) in Singapore, from 1995 to 2014**. 
 
-Therefore, we collected data on economic growth, income inequality, usage of public transports and number of privately and publicly owned vehicles, between 1995 and 2014. As suggested by our research question, economic growth, income inequality and usage of public transportations are the explanatory varibales, while purchase of cars is the dependent variable. The reason why we chose cars, is thar they are an example of luxury goods with which wqealthy people can show their social status; in fact, in Singapore purchasing cars is particularly expensive, due to a certificate of car entitlement which may cost even more than 70.000 dollars. For more details about the research proposal and case justification see [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal).
+We collected data on economic growth, income inequality, usage of public transportation and number of privately and publicly owned vehicles, between 1995 and 2014. As suggested by our research question, economic growth, income inequality and usage of public transportations are the explanatory varibales, while purchase of cars is the dependent variable. The reason why we chose cars, is thar they are an example of luxury goods with which wqealthy people can show their social status; in fact, in Singapore purchasing cars is particularly expensive, due to a certificate of car entitlement (**source**) which may cost even more than 70.000 dollars. For more details about the research proposal and case justification see [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal).
 
 # Processing data
 
@@ -284,7 +284,7 @@ pander::pander(data.table, split.cells = 30, split.table = Inf, style = "grid")
 
 - After importing data we used the "date" variable (year) as a unique identifier for all four datasets, in order to merge them afterwards.
 
-- Since time frames of the data were different, we selected a common span of time: 1995-2014. In the case of bottom 90% and top 10% average income, we had to make a linear regression to forecast missing values (from 2009 until 2014). The results, available in a new dataframe, were later on bounded with the orginal one, in order to have the entire time series.  As for LRT, values from 1995 until 1998 were missing since the service started to be provided from 1999; therefore, we completed the dataframe giving the value "0" for the first 4 years of the time span taken into consideration.
+- Since time frames of the data were different, we selected a common span of time: 1995-2014. In the case of bottom 90% and top 10% average income, we had to make a linear regression to forecast missing values (from 2009 until 2014). The results, available in a new dataframe, were later on bounded with the orginal one, in order to have the entire time series.  As for LRT, values from 1995 until 1998 were missing since the service started to be provided from 1999 (**source**); therefore, we completed the dataframe giving the value "0" for the first 4 years of the time span taken into consideration.
 
 - Cleaning the data was limited to changing column names, eliminating the unnecesary ones and organizing the various data frames so to merge them more easily afterwards, using the year as common denominator. Only in the case of the dataframe cointaining the number of private cars in Singapore from 1995 until 2014 (car.pop.1) we had to change the format of the data from characters to integers, due to an incorrect import.
 
@@ -322,12 +322,12 @@ The following graph shows the trend of the three explanatory variables in Singap
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
 
 # Creating first figure: trend in gdp, bottom 90% and top 10% average income
-fig.1 <- ggplot2::ggplot(data.final, aes(x=data.final$date)) + 
-  geom_line(aes(y=data.final$top, color="top")) + 
-  geom_line(aes(y=data.final$bottom, color="bottom")) + 
-  geom_line(aes(y=data.final$gdp.per.capita, color="gdp.per.capita")) + 
+fig.1 <- ggplot(data.final, aes(x= date)) +
+  geom_line(aes(y=data.final$top, color= "top")) +
+  geom_line(aes(y=data.final$bottom, color = "bottom")) +
+  geom_line(aes(y=data.final$gdp.per.capita, color = "gdp.per.capita")) +
   theme_light()
-
+fig.1
 
 #changing the name of the variables in the y axis
 fig.1<-fig.1 + labs(x = "years", y = NULL)
@@ -465,7 +465,7 @@ source("http://www.sthda.com/upload/rquery_cormat.r")
 rquery.cormat(data.final.c)
 ```
  
-![Figure 5 - Correlation plot](/Users/emiliasicari/Desktop/Third_assignment/Correlation plot.png)
+![Figure 5 - Correlation plot](/Users/emiliasicari/Desktop/Third_assignment/Figures/Correlation plot.png)
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE, include = TRUE}
 correlation <- cor(data.final.c)
@@ -487,7 +487,7 @@ stargazer::stargazer(m1,
 ```
 
 ## Further steps
-- investigating collinearity
-
+- investigating collinearity (VIF analysis)
+- 
 # References
 
