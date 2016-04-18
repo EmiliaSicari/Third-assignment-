@@ -42,12 +42,12 @@ packages <- c('devtools', 'repmis', 'Quandl', 'data.table', 'rio', 'ggplot2', 's
 repmis::LoadandCite(packages, file = 'packages.bib')
 
 # importing data on Singapore's economic growth, selecting only the time span of interest
-URL <- "https://www.quandl.com/api/v3/datasets/ODA/SGP_NGDPPC.csv"
+URL <- "https://www.quandl.com/api/v3/datasets/UNAE/GDPCDPC_SGP.csv?api_key=zKGy91t7cY2TmfwbfAwe"
 gdp.pc <- repmis::source_data(URL, header = TRUE, nrows=21, skip = 5)
 #adding a new column, and inserting content 
 gdp.pc["MY_NEW_COLUMN"] <- 2015:1995
 #erasing a column
-gdp.pc$`2017-12-31`<- NULL
+gdp.pc$`2009-12-31`<- NULL
 #changing the names of the columns
 names(gdp.pc) <- c("gdp per capita", "date")
 #changing order of columns
