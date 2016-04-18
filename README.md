@@ -18,16 +18,24 @@ The requirements of the assignment are the following:
 
 A part from this Readme file, decribing its content, the repository contains the following elements:
 
-1.**Third_Assignment(2).Rmd**, containing our assignment in R Markdown language. It includes the research question, the description of data sources, the process of data gathering and data cleaning, and the preliminary results of descriptive and inferential statistical modelling. 
-2. **Third_Assignment_2_.pdf** is the PDF version of the Markdown document, formatted in academic style and including charts, plots and a references list.
-3. **Dataframes**: a child repository including the the following dataframes in csv format:
+- **Third_Assignment(2).Rmd**, containing our assignment in R Markdown language. It includes the research question, the description of data sources, the process of data gathering and data cleaning, and the preliminary results of descriptive and inferential statistical modelling. 
+
+- **Third_Assignment_2_.pdf** is the PDF version of the Markdown document, formatted in academic style and including charts, plots and a references list.
+
+- **Dataframes**: a child repository including the the following dataframes in csv format:
+
     + ObservationData_rblkfmd.csv, containing the time series of data on top 10% average income in     Singapore from 1995 until 2014, downloaded from the orld Top Incomes Database available on [Knoema](http://knoema.com/).
+    
     + ObservationData_zqpldgb.csv, containing the time series of data on bottom 90% average income in Singapore from 1995 until 2014, downloaded from the orld Top Incomes Database available on [Knoema](http://knoema.com/).
+    
     + Final.data.frame.csv, the final dataframe that we created by merging all the single datasets that we are using for our analysis, composed on 20 observations and 14 variables. We exported the file as csv in our repository in order to have it at our disposal in the further steps of our work. 
+    
     + **General summary data summary.tex**,, showing the the basic decriptive statistics for our variables.
-4. **Tables and figures**, a child repository containing: 
+    
+- **Tables and figures**, a child repository containing: 
     + Correlation plot, showing the correlation among the different variables taken into consideration in the anlysis. We exported it in our repository for the same reason as the Final.data.frame.csv.
-5.**References**, a child repository cointaining two files with the sources mentioned in the text in both the Rmd and pdf versions of the assignment.
+    
+- **References**, a child repository cointaining two files with the sources mentioned in the text in both the Rmd and pdf versions of the assignment.
     + bibliography.bib, a file listing the references cited in our assignment.
     + packeges.bib, including the citations for all the R packages we used in our analysis.
  
