@@ -1,6 +1,6 @@
 
 % Table created by stargazer v.5.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
-% Date and time: Dom, Apr 17, 2016 - 18:13:26
+% Date and time: Lun, Apr 18, 2016 - 10:12:32
 \begin{table}[!htbp] \centering 
   \caption{General data summary} 
   \label{labels1} 
@@ -9,7 +9,7 @@
 \hline \\[-1.8ex] 
 Statistic & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{St. Dev.} & \multicolumn{1}{c}{Min} & \multicolumn{1}{c}{Max} \\ 
 \hline \\[-1.8ex] 
-gdp.per.capita & 20 & 50,294.8 & 12,748.0 & 35,345.5 & 71,317.9 \\ 
+gdp.per.capita & 20 & 52,145.5 & 13,146.2 & 36,524.7 & 72,711.4 \\ 
 inequality & 20 & 6.1 & 1.3 & 3.9 & 7.8 \\ 
 cars & 20 & 466,148.3 & 97,290.5 & 342,245 & 607,292 \\ 
 rentalcars & 20 & 10,097.0 & 3,881.3 & 5,144 & 18,847 \\ 
