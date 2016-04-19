@@ -22,20 +22,15 @@ A part from this Readme file, decribing its content, the repository contains the
 
 - **Third_Assignment_2_.pdf** is the PDF version of the Markdown document, formatted in academic style and including charts, plots and a references list.
 
-- **Dataframes**: a child repository including the the following dataframes in csv format:
+- **ObservationData_rblkfmd.csv** (also in zip format), containing the time series of data on top 10% average income in Singapore from 1995 until 2014, downloaded from the orld Top Incomes Database available on [Knoema](http://knoema.com/).
+    
+- **ObservationData_zqpldgb.csv** (also in zip format), containing the time series of data on bottom 90% average income in Singapore from 1995 until 2014, downloaded from the orld Top Incomes Database available on [Knoema](http://knoema.com/).
+    
+- **Final.data.frame.csv**, the final dataframe that we created by merging all the single datasets that we are using for our analysis, composed on 20 observations and 14 variables. We exported the file as csv in our repository in order to have it at our disposal in the further steps of our work. 
 
-    + ObservationData_rblkfmd.csv, containing the time series of data on top 10% average income in     Singapore from 1995 until 2014, downloaded from the orld Top Incomes Database available on [Knoema](http://knoema.com/).
+- **Correlation plot**, showing the correlation among the different variables taken into consideration in the anlysis. We exported it in our repository for the same reason as the Final.data.frame.csv.
     
-    + ObservationData_zqpldgb.csv, containing the time series of data on bottom 90% average income in Singapore from 1995 until 2014, downloaded from the orld Top Incomes Database available on [Knoema](http://knoema.com/).
-    
-    + Final.data.frame.csv, the final dataframe that we created by merging all the single datasets that we are using for our analysis, composed on 20 observations and 14 variables. We exported the file as csv in our repository in order to have it at our disposal in the further steps of our work. 
-    
-    + **General summary data summary.tex**,, showing the the basic decriptive statistics for our variables.
-    
-- **Tables and figures**, a child repository containing: 
-    + Correlation plot, showing the correlation among the different variables taken into consideration in the anlysis. We exported it in our repository for the same reason as the Final.data.frame.csv.
-    
-- **References**, a child repository cointaining two files with the sources mentioned in the text in both the Rmd and pdf versions of the assignment.
-    + bibliography.bib, a file listing the references cited in our assignment.
-    + packeges.bib, including the citations for all the R packages we used in our analysis.
+- **bibliography.bib**, a text file listing the references cited in our assignment
+
+- **packeges.bib**, a text file including the citations for all the R packages we used in our analysis.
  

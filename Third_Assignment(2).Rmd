@@ -342,9 +342,10 @@ fig.1 <- fig.1 + scale_colour_discrete(name= NULL,
 #changing the colour of the background of the plot
 fig.1 <- fig.1 + theme(panel.border = element_blank(),
                        panel.grid.major = element_blank(),
-                       panel.grid.minor = element_blank())
-#making the axes appear
-fig.1 <- fig.1 + theme(axis.line= element_line(size = 0.25, linetype = "solid",
+                       panel.grid.minor = element_blank(),
+                       axis.line.x = element_line(size = 0.25, linetype = "solid",
+                                   colour = "black"), 
+                       axis.line.y = element_line(size = 0.25, linetype = "solid", 
                                                   colour = "black"))
 
 #giving a title to the graph
@@ -400,6 +401,12 @@ fig.3 <- fig.3 + theme(legend.title=element_blank())
 #changing the position of the legend 
 fig.3 <- fig.3 + theme(legend.position="bottom")
 
+#making axes appear
+fig.3 <- fig.3 + theme(axis.line.x = element_line(size = 0.25, linetype = "solid",
+                                   colour = "black"), 
+                       axis.line.y = element_line(size = 0.25, linetype = "solid", 
+                                                  colour = "black"))
+
 # giving a title to the graph 
 fig.3 <- fig.3 + ggtitle("Figure 3 - Number of public and private vehicles in Singapore (1995-2014)") + theme(plot.title = element_text(lineheight=1, size = 10))
 
@@ -422,12 +429,13 @@ fig.4 <- ggplot2::ggplot(data.final, aes(x=data.final$date)) +
 #changing the name of the variables in the y axis
 fig.4 <-fig.4 + labs(x = "years", y = NULL)
 
-#changing the colour of the background of the plot
+#changing the colour of the background of the plot and making axis appear
 fig.4 <- fig.4 + theme(panel.border = element_blank(),
                        panel.grid.major = element_blank(),
-                       panel.grid.minor = element_blank())
-#making the axes appear
-fig.4 <- fig.4 + theme(axis.line= element_line(size = 0.25, linetype = "solid",
+                       panel.grid.minor = element_blank(),
+                       axis.line.x = element_line(size = 0.25, linetype = "solid",
+                                   colour = "black"), 
+                       axis.line.y = element_line(size = 0.25, linetype = "solid", 
                                                   colour = "black"))
 
 ##changing the position of the legend 
@@ -460,7 +468,7 @@ source("http://www.sthda.com/upload/rquery_cormat.r")
 rquery.cormat(data.final.c)
 ```
  
-![Figure 5:Correlationplot](/Users/rafalopezv/Dropbox/R/Third-assignment/Correlation Plot.png)
+![Figure 5:Correlationplot](Correlation Plot.png)
 
 The following table shows the correlation coefficients. ^[Considerations made in the previous footnote also apply for the correlation matrix.]
 
