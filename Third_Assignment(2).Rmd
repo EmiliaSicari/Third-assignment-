@@ -456,7 +456,7 @@ data.final.c$other <- NULL
 # Changing the names to makte the chart fit in the page
 names(data.final.c) <- c("gdp", "ineq.", "top", "bottom", "cars", "rental cars", "taxis", "buses", "m.bikes", "bus.u", "mrt.u", "lrt.u")
 # Creating a correlation plot
-source("http://www.sthda.com/upload/rquery_cormat.r")
+source("http://www.sthda.com/upload/rquery_cormat.r") 
 rquery.cormat(data.final.c)
 ```
  
