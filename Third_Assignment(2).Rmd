@@ -1,20 +1,16 @@
 ---
 title: "Third Assignment"
+subtitle: Christopher Gandrud, Hertie School of Governance, Spring 2016
 author: "Emilia Sicari & Rafael Lopez V."
-date: "March 25, 2016"
+date: "April 19, 2016"
 output:
   pdf_document:
     number_sections: yes
     toc: yes
     toc_depth: 2
-  html_document:
-    toc: yes
-    toc_depth: '2'
-  word_document:
-    toc: yes
-    toc_depth: '2'
-subtitle: Christopher Gandrud, Hertie School of Governance, Spring 2016
-bibliography: packages.bib
+bibliography: 
+  - bibliography.bib
+  - packages.bib
 ---
 
 ```{r setup, include=FALSE, error=FALSE, message=FALSE, results = 'asis'}
@@ -25,17 +21,15 @@ getwd()
 try(setwd("/Users/emiliasicari/Desktop/Third_assignment"), silent = TRUE)
 try(setwd("/Users/rafalopezv/Dropbox/R/Third-assignment/"), silent = TRUE)
 
-#loading packages or installing them if not already available
-library(devtools)
+#loading packages 
 library(Quandl)
-library(data.table)
 library(rio)
 library(ggplot2)
 library(stargazer)
 library(pander)
 library(knitr)
 library(corrplot)
-library(scales)
+
 
 # creating an object of the packages for citation purposes
 packages <- c('devtools', 'repmis', 'Quandl', 'data.table', 'rio', 'ggplot2', 'stargazer', 'pander', 'corrplot', 'scales')
@@ -43,11 +37,12 @@ repmis::LoadandCite(packages, file = 'packages.bib')
 
 # importing data on Singapore's economic growth, selecting only the time span of interest
 URL <- "https://www.quandl.com/api/v3/datasets/ODA/SGP_NGDPPC.csv?api_key=zKGy91t7cY2TmfwbfAwe"
-gdp.pc <- repmis::source_data(URL, header = TRUE, nrows=21, skip = 5)
+gdp.pc <- repmis::source_data(URL)
+gdp.pc <- repmis::source_data(URL, header = TRUE, nrows=20, skip = 7)
 #adding a new column, and inserting content 
-gdp.pc["MY_NEW_COLUMN"] <- 2015:1995
+gdp.pc["MY_NEW_COLUMN"] <- 2014:1995
 #erasing a column
-gdp.pc$`2017-12-31`<- NULL
+gdp.pc$`2015-12-31`<- NULL
 #changing the names of the columns
 names(gdp.pc) <- c("gdp per capita", "date")
 #changing order of columns
@@ -232,7 +227,7 @@ data.final4 <- merge (data.final3, bottom.complete, by='date')
 data.final <-  merge (data.final4, trans.ut.lrt2, by ='date')
 
 # Moving the columns
-data.final[,c(1,2,3,12,13,4,5,6,7,8,9,10,11,14)]
+data.final <- data.final[,c(1,2,3,12,13,4,5,6,7,8,9,10,11,14)]
 data.final
 
 # Exporting the final data frame as csv file
@@ -246,24 +241,28 @@ rio::export(data.final, "final.data.frame.csv", col.names = TRUE)
 
 **Research question: How the rise in inequality, economic growth and usage of public transportation influences the purchase of cars (as an example of luxury good) in Singapore, from 1995 to 2014**. 
 
-We collected data on economic growth, income inequality, usage of public transportation and number of privately and publicly owned vehicles, between 1995 and 2014. As suggested by our research question, economic growth, income inequality and usage of public transportations are the explanatory varibales, while purchase of cars is the dependent variable. The reason why we chose cars, is thar they are an example of luxury goods with which wqealthy people can show their social status; in fact, in Singapore purchasing cars is particularly expensive, due to a certificate of car entitlement (**source**) which may cost even more than 70.000 dollars. For more details about the research proposal and case justification see [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal).
+We collected data on economic growth, income inequality, usage of public transportation and number of privately and publicly owned vehicles, between 1995 and 2014. As suggested by our research question, economic growth, income inequality and usage of public transportations are the explanatory varibales, while purchase of cars is the dependent variable. The reason why we chose cars, is thar they are an example of luxury goods with which wqealthy people can show their social status; in fact, in Singapore purchasing cars is particularly expensive, due to a certificate of car entitlement  which may cost even more than 70.000 dollars [@LandTransportAuthority:2014ue]. For more details about the research proposal and case justification see [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal).
 
 # Processing data
 
 ## Data sources and data gathering
 
+This document and particularly data processing was made using: R [-@CiteR], Quandl [-@R-Quandl], Corrplot [-@R-corrplot], Ggplot[-@R-ggplot2], Pander [-@R-pander], Repmis [-@R-repmis] and Rio [-@R-rio]. 
+
 The data for our empirical analysis were retrieved from:
 
-- IMF Cross Country Macroeconomic Statistics open data available on [Quandl](https://www.quandl.com/data/ODA/SGP_NGDPPC). From this source we downloaded data showing the trend in Singopore's GDP per capita meassured in singaporean dollars from 1995 to 2014. The data was provided in csv format and imported on R using the URL of the website.
+- IMF Cross Country Macroeconomic Statistics open data available on [Quandl](https://www.quandl.com/data/ODA/SGP_NGDPPC). From this source we downloaded data showing the trend in Singopore's GDP per capita meassured in singaporean dollars from 1981 to 2021 (forecasted from 2015 onwards). The data was provided in csv format and imported on R using the URL of the website.
 
-- World Top Incomes Database available on [Knoema](http://knoema.com/), providing access to data on the distribution of top incomes in more than twenty five countries across the globe. From this source we downloaded data on the top 10% average income and bottom 90% average income in Singapore from 1947 until 2009, meassured in singaporean dollars. Since it was not possible to directly import the database to R, we requested and received the data via e-mail in csv format. Such data are available in the repository.  
-The reason why we did not gather data from the database [Clio Infra](https://www.quandl.com/data/CLIO/SGP_II-Income-Inequality-Singapore) available on Quandl as we had defined in our [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal) , is that it did not provide sufficient data for the time span we are considering.
+- World Top Incomes Database available on [Knoema](http://knoema.com/), provides access to data on the distribution of top incomes in more than twenty five countries across the globe. From this source we downloaded data on the top 10% average income and bottom 90% average income in Singapore from 1947 until 2009, meassured in singaporean dollars. Since it was not possible to directly import the database to R, we requested and received the data via e-mail in csv format. This data set is available in the repository.^[We did not gather data from the database [Clio Infra](https://www.quandl.com/data/CLIO/SGP_II-Income-Inequality-Singapore) as initially stated in our [ResearchProposal](https://github.com/EmiliaSicari/ResearchProposal) , since  it did not provide sufficient data for the time span we are considering.]  
 
-- [Singapore's open data portal](https://data.gov.sg) offered two databases: 
-    + The [Annual Motor Vehicle Population](https://data.gov.sg/dataset/annual-motor-vehicle-population-by-type-of-vehicles), providing provides the number of public and private vehicles from 1995 to 2014, including: mortorbikes, rental cars, buses, taxis and other type of vehicles. While mortorbikes, rental cars and cars are private means of transportation, buses and taxis are to be considered public since in Singapore even the taxis are provided by the state.
+
+- [Singapore's open data portal](https://data.gov.sg) offered two data bases: 
+    + The [Annual Motor Vehicle Population](https://data.gov.sg/dataset/annual-motor-vehicle-population-by-type-of-vehicles),  provides the number of public and private vehicles from 1960 to 2015, including: mortorbikes, rental cars, buses, taxis and other type of vehicles. While mortorbikes, rental cars and cars are private means of transportation, buses and taxis are to be considered public since in Singapore even the taxis are provided by the state.
     
     + [Public transport utilization](https://data.gov.sg/dataset/public-transport-utilisation-average-public-transport-ridership). This data is expressed as the daily average of thounsand commuters using public trasport by year. It covers the span from 1995 to 2014 and includes the following modes of transportation: MRT (underground), LRT (a localised rail systems acting as feeder services to the Mass Rapid Transit network), taxis (publicly run) and buses.
-    
+
+\pagebreak
+
 The following table summarizes the variables taken into consideration for the analysis.
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE, results='asis'}
@@ -271,20 +270,20 @@ The following table summarizes the variables taken into consideration for the an
 # Creating the summary table stated before
 Variable <- c("gdp per capita","inequality","anual motor vehicle","public transport utilization")
 
-Description <- c("measured in singaporean dollars at current prices. From 1995 to 2014", "top 10% and bottom 90% singaporean's average income measured in singaporean dollars", "number of: cars, rental cars, buses, taxis, buses, motorbikes", "average commuters using daily: MRT, LRT, Buses, Taxis")  
+Description <- c("measured in singaporean dollars at current prices", "top 10% and bottom 90% singaporean's average income measured in singaporean dollars", "number of: cars, rental cars, buses, taxis, buses, motorbikes", "average commuters using daily: MRT, LRT, Buses, Taxis")  
 
-Time.frame <- c("1980-2014", "1947-2009", "1960-2015", "1995-2014")
+Time.frame <- c("1980-2021", "1947-2009", "1960-2015", "1995-2014")
 
 data.table <- data.frame(Variable, Description, Time.frame)
 
-pander::pander(data.table, split.cells = 30, split.table = Inf, style = "grid")
+pander::pander(data.table, split.cells = 30, split.table = Inf, keep.line.breaks = TRUE, justify = "left", caption = 'Summary of variables')
 ```
 
-## Cleaning, processing and merging of datasets
+## Cleaning, processing and merging data sets
 
 - After importing data we used the "date" variable (year) as a unique identifier for all four datasets, in order to merge them afterwards.
 
-- Since time frames of the data were different, we selected a common span of time: 1995-2014. In the case of bottom 90% and top 10% average income, we had to make a linear regression to forecast missing values (from 2009 until 2014). The results, available in a new dataframe, were later on bounded with the orginal one, in order to have the entire time series.  As for LRT, values from 1995 until 1998 were missing since the service started to be provided from 1999 (**source**); therefore, we completed the dataframe giving the value "0" for the first 4 years of the time span taken into consideration.
+- Since time frames of the data were different, we selected a common span of time: 1995-2014. In the case of bottom 90% and top 10% average income, we had to make a linear regression to forecast missing values (from 2009 until 2014). The results, available in a new dataframe, were later on bounded with the orginal one, in order to have the entire time series.  As for LRT, values from 1995 until 1998 were missing since the service started to be provided from 1999 [@SingaporeInfopedia:2005tl]; therefore, we completed the dataframe giving the value "0" for the first 4 years of the time span taken into consideration.
 
 - Cleaning the data was limited to changing column names, eliminating the unnecesary ones and organizing the various data frames so to merge them more easily afterwards, using the year as common denominator. Only in the case of the dataframe cointaining the number of private cars in Singapore from 1995 until 2014 (car.pop.1) we had to change the format of the data from characters to integers, due to an incorrect import.
 
@@ -294,7 +293,7 @@ pander::pander(data.table, split.cells = 30, split.table = Inf, style = "grid")
 
 - Finally, we merged all the single dataframes into the new one, containing all the variables that we used to perfom descriptive and inferential statistical analyses.  
 
-#Descriptive and inferential statistics
+#Descriptive and inferential statistics: preliminary results
 
 ## Descriptive statistics and central tendency
 
@@ -307,17 +306,17 @@ data.final.s <- data.final
 data.final.s$date <- NULL 
 
 # Creating nicer labels
-labels1 <- c("gdp per capita", "inequality", "top 10% income", "bottom 90% income", "number of cars", "number of rental cars", "number of taxis", "number of buses", "number of motorbikes", "other vehicles", "bus usage", "mrt usage", "lrt usage" )
+labels1 <- c("gdp per capita", "inequality", "top 10% income", "bottom 90% income", "number of cars", "number of rental cars", "number of taxis", "number of buses", "number of motorbikes", "other vehicles", "bus usage", "mrt usage", "lrt usage")
 
 # Creating the table
 stargazer(data.final.s, type = "latex",
         title = "General data summary", label = "labels1",
-        digits = 1, out = "General data summary.text.output")
+        digits = 1, out = "General data summary.text.output", header = FALSE)
 ```
 
 ##Trends in gdp per capita and inequality
 
-The following graph shows the trend of the three explanatory variables in Singapore between 1995 and 2014. As we can see, although slowly, the gdp per capita has risen thourghout the whole period, despite a slight decline between 2002 and 2005 and a more serious reduction in the years of the financial crisis, between 2008 and 2010. The top 10% average income shows the same trend: a steady increase throughout the whole period (in 2014 its value was more than 100% higher than the initial one), with a slight decline between 2002 and 2005, and a more serios reduction in the years of the financial crisis. However, the value of the bottom 90% average income has barely changed, enlarging the difference between the richest and the poorest and showing that the increase in the gdp per capita has benefitted only the top earners at the expensed of the poorest.  
+The following graph shows the trend of the explanatory variables in Singapore between 1995 and 2014. As we can see, although slowly, the gdp per capita has risen thourghout the whole period, despite a slight decline between 2002 and 2005 and a more serious reduction in the years of the financial crisis, between 2008 and 2010. The top 10% average income shows the same trend: a steady increase throughout the whole period (in 2014 its value was more than 100% higher than the initial one), with a slight decline between 2002 and 2005, and a more serious reduction in the years of the financial crisis. However, the value of the bottom 90% average income has barely changed, enlarging the difference between the top and bottom populations. 
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
 
@@ -327,7 +326,6 @@ fig.1 <- ggplot(data.final, aes(x= date)) +
   geom_line(aes(y=data.final$bottom, color = "bottom")) +
   geom_line(aes(y=data.final$gdp.per.capita, color = "gdp.per.capita")) +
   theme_light()
-fig.1
 
 #changing the name of the variables in the y axis
 fig.1<-fig.1 + labs(x = "years", y = NULL)
@@ -338,24 +336,26 @@ fig.1 <- fig.1 + theme(legend.position="bottom")
 #changing the name of title and labels of legend
 fig.1 <- fig.1 + scale_colour_discrete(name= NULL,
                          breaks=c("bottom", "gdp.per.capita", "top"),
-                         labels=c("Bottom 90% average income", "Gdp per capita", "Top 10% average income"))
+                         labels=c("Bottom 90% average income", "Gdp per capita",
+                                  "Top 10% average income"))
 
 #changing the colour of the background of the plot
 fig.1 <- fig.1 + theme(panel.border = element_blank(),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          axis.line.x = element_line(size = 0.25, linetype = "solid",
-                                   colour = "black"), 
-          axis.line.y = element_line(size = 0.25, linetype = "solid",
-                                   colour = "black"))
+                       panel.grid.major = element_blank(),
+                       panel.grid.minor = element_blank(),
+                       axis.line.x = element_line(size = 0.25, linetype = "solid",
+                                                  colour = "black"), 
+                       axis.line.y = element_line(size = 0.25, linetype = "solid",
+                                                  colour = "black"))
+
 #giving a title to the graph
 fig.1 <- fig.1 + ggtitle("Figure 1 - Gdp per capita, top 10% and bottom 90% average income\n
-in Singapore measured in national currency at current prices (1995-2014)") + theme(plot.title = element_text(lineheight=0.5, size = 10))
-
+in Singapore measured in national currency at current prices (1995-2014)") +
+  theme(plot.title = element_text(lineheight=0.5, size = 10))
 fig.1
 ```
 
-The growing difference between the top and bottom earners is clarified by the following graph, showing trend in inequality in Singapore, measured in number of times by which the top 10% earners are richer than those earning the bottom 90% average income. The graph confirms what already highlighted above: the difference between the rich and the poor has been increasing all the time, and the trend only reversed between 2002 and 2005 and beteen 2008 and 2010. 
+The growing difference between the top and bottom earners is clarified by the following graph, showing trend in inequality in Singapore, measured in number of times by which the top 10% earners are richer than those earning the bottom 90% average income. The graph confirms what already highlighted above: the difference between the rich and the poor has been increasing all the time, and the trend only reversed between 2002 and 2005 and between 2008 and 2010. The average ratio between both groups is 6.1 and has reaached a maximun value of 7.8.
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
 #creating the second figure: trend in inequality in number of times. 
@@ -374,14 +374,13 @@ fig.2 <- fig.2 + theme(panel.border = element_blank(),
                                    colour = "black"))
                                    
 #giving a title to the graph
-fig.2 <- fig.2 + ggtitle("Figure 2 - Inequality in Singapore measured by the difference between \n the top 10% and bottom 90% average income in number of times (1995-2014)") + theme(plot.title = element_text(lineheight=1, size = 10))
-
+fig.2 <- fig.2 + ggtitle("Figure 2 - Inequality in Singapore measured by the distance between \n the top 10% and bottom 90% average income in number of times (1995-2014)") + theme(plot.title = element_text(lineheight=1, size = 10))
 fig.2
 ```
 
 ##Trends in ownership and usage of vehicles
 
-The following graph shows the number of public and private vehicles present in Singapore between 1995 and 2015. What is striking, is the continuous and rapid increase in tge number of privately owned cars (especially since 2006):  in fact, in Singapore owing a car is particularly expensive, since not only cars are subjected to high taxation, but also the government requires car owners to purchase certificate of car entitlement, whose cost can be higher than 70.000 dollars. Therefore our first two hypotheses are verified: the higher the economic growth - measued by gdp per capita - and the higher the inequality, the higher the purchase of cars (for more details about the hypotheses see https://github.com/EmiliaSicari/ResearchProposal). A further assumption to be investigated is that such increase might be linked to the likewise rise in the top 10% average income: as the rich become richer, the purchase of luxury goods, such as cars, increases as well. 
+The following graph shows the number of public and private vehicles present in Singapore between 1995 and 2015. What is striking, is the continuous and rapid increase in the number of privately owned cars (especially since 2006). This trend supports the hypothesis  which links high the economic growth, high the inequality and increase of cars' purchase ^[For more details about the hypotheses see https://github.com/EmiliaSicari/ResearchProposal]. A further assumption to be investigated is that such increase might be linked to the likewise rise in the top 10% average income: as the rich become richer, the purchase of luxury goods, such as cars, increases as well. 
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
 #creating the third figure: trend in number of vehicles      
@@ -421,7 +420,7 @@ fig.3 <- fig.3 + scale_y_continuous(name= NULL, labels = comma)
 fig.3                                  
 ```
 
-At the same time, even the number of passengers in the main public transportation (MRT and buses) has increased consistenlty over time. Despite that, the publicly owned buses have not chaged in number, as shown in the previous graph. Consequently, the third hypotheses - the lower the usage of public transports,the the purchase of luxury cars - is falsified: in fact, usage of public transports has either increased (in the case of MRT and buses) or stayed the same (in the case of LRT), while the number of private cars has grown consistently. Even in this case a further assumption to be investigated is that those usign public transports are the lower earners. 
+At the same time,  the number of passengers in the main public transportation (MRT and buses) has increased consistenlty over time. Despite that, the publicly owned buses have not significantly changed in number. Consequently, this also supports the hypothesis that the usage of public transport is not entirely linked with the purchase of cars: in fact, usage of public transport has either increased (in the case of MRT and buses) or stayed the same (in the case of LRT), while the number of private cars has grown consistently. Even in this case a further assumption to be investigated is that those using public transports are lower earners. 
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
 #Creating the fourth figure: trend in vehicles utilization           
@@ -448,46 +447,72 @@ fig.4 <- fig.4 + theme(legend.position="bottom")
 fig.4 <- fig.4 + scale_colour_discrete(name= NULL,
                          breaks=c("buses", "LRT", "MRT"),
                          labels=c("buses", "MRT", "LRT"))
-fig.4 <- fig.4 + ggtitle("Figure 4 - Average daily passengers on public transports in Singapore \n in thousands (1995-2014)") + theme(plot.title = element_text(lineheight=1, size = 10))
+fig.4 <- fig.4 + ggtitle("Figure 4 - Average daily passengers using public transport in Singapore \n in thousands (1995-2014)") + theme(plot.title = element_text(lineheight=1, size = 10))
 fig.4
 ```
 
-# Coorelation analysis
+## Correlation analysis
 
-A first step to check out our new assumptions is to see the correlation between the variables included in the model, shown by the plot below: blue indicates negative correlation between variables, while red highlights positive correlations; color intensity and the size of the circles are proportional to the correlation coefficients, and the correlation coefficients corresponding to the color intensity are shown in the legend below the diagram. 
-What clearly emerges from the plot, is that the variables are in almost all of the cases highly and positively correlated to each other. Bottom 90% average income and buse utilization are less correlated to the other variables, and bottom 90% average income is also negatively correlated with both inequality and buses utilization (which weakens the assumption that the poorest are those who use more public transportations). However, high correlation among explanatory variables might create problems in multiple regression analysis (multicollinearity). Therefore, it is necessary to explore collinearity before proceeding to the regression analysis. 
+The graph below ^[bus.u, lrt.u and mrt.u stand for the utilization of these modes of transportation. We also eliminated the "other" variable since it not included in the anlysis] shows the correlation among the varibles considered in our analysis: the darker the colour, the stronger the correlation. Likewise, the size of the circles shows the magnitude of the correlation. While blue indicates negative correlation, red is associated with positive correlation.
+
+What clearly emerges from the plot, is that the variables are in almost all of the cases highly and positively correlated to each other. Bottom 90% average income and buse utilization are less correlated to the other variables, and bottom 90% average income is also negatively correlated with both inequality and buses utilization (which weakens the assumption that the poorest are those who use more public transportations). However, high correlation among explanatory variables might create problems due to multicollinearity and may show a biased in the variables   in general , which will be assesed in the next stage of the research. 
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE, include = FALSE}
+# Creating a new data frame eliminating the date and other variables, not neeccesarry for the correletion matrix
 data.final.c <- data.final.s
-names(data.final.c) <- c("gdp", "ineq.","cars", "rentals", "taxis", "buses", "m.bikes", "other", "bus.u", "mrt.u", "top", "bottom", "lrt.u")
-data.final.c
+data.final.c$other <- NULL
+
+# Changing the names to makte the chart fit in the page
+names(data.final.c) <- c("gdp", "ineq.", "top", "bottom", "cars", "rental cars", "taxis", "buses", "m.bikes", "bus.u", "mrt.u", "lrt.u")
+# Creating a correlation plot
 source("http://www.sthda.com/upload/rquery_cormat.r")
 rquery.cormat(data.final.c)
 ```
  
-![Figure 5 - Correlation plot](/Users/emiliasicari/Desktop/Third_assignment/Figures/Correlation plot.png)
+![Figure 5:Correlationplot](/Users/rafalopezv/Dropbox/R/Third-assignment/Figures/Correlation Plot.png)
+
+The following table shows the correlation coefficients. ^[Considerations made in the previous footnote also apply for the correlation matrix.]
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE, include = TRUE}
+# Creating a correlation matrix
 correlation <- cor(data.final.c)
-knitr::kable(correlation, digits = 2)
+knitr::kable(correlation, digits = 2, caption = 'Correlation matrix')
 ```
 
 ## Multiple regression analysis
+
+To provide preliminary results about our research question, we used a multiple linear regression model. 
 
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
 # Creating the firts model
 m1 <- lm(cars ~ gdp.per.capita + inequality + bus.u + mrt.u + lrt.u, data = data.final)
 ```
 
+
 ```{r, echo = FALSE, message=FALSE, warning = FALSE, results="asis"}
+
+labels2 <- c("gdp per capita", "inequality", "buses utilization", "MRT utilization", "LRT utilization","(Intercept)")
 # Creating a table of the models with stargazer
-stargazer::stargazer(m1,
-    title = "Multiple regeression model", covariate.labels = "labels1", 
-    digits = 2, type = 'latex', header =  FALSE)
+stargazer::stargazer(m1, covariate.labels = labels2, 
+                     title = 'Multiple regression model',
+                     digits = 2, type = 'latex', header =  FALSE)
 ```
 
-## Further steps
-- investigating collinearity (VIF analysis)
-- 
-# References
+Probably due to the high correlation between explanatory variables, the model has a low statistical significance, just one variable has significance at 95% of confidence. Despite the**gdp percapita** is the only significant variable, its explanatory power seem to be biased, since the coefficient suggests that a 5 dollar increase result in the purchase of 1 extra car. Likewise, the high value of the R2 suggests that the model needs to be reviewed, givinen the low statistical significance of the whole model. Therefore, further modelling and data transformation is needed to reach higher standards of significance.
+
+# Further steps
+
+- Building at least two alternative models:
+    + A probabilistic model, showing the likelihood of an increase in the population of cars given the independant variables.
+    + A second model using logartims in all the variables or some of them, in order to show the variable changes in percent terms.
+- Assesing multicollinearity, and accordingly correcting the model.  
+- Analyzing possible bias by homoscedasticity.
+- Controlling for other variables such us governmental policies that may have affected the model.
+- Making analysis of influential residuals.
+- Improving the focus in the literature review.
+- Preparing the final report and presentation.
+
+\pagebreak
+
+#References
 
