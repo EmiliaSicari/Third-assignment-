@@ -311,7 +311,7 @@ labels1 <- c("gdp per capita", "inequality", "top 10% income", "bottom 90% incom
 # Creating the table
 stargazer(data.final.s, type = "latex",
         title = "General data summary", label = "labels1",
-        digits = 1, out = "General data summary.text.output", header = FALSE)
+        digits = 1, header = FALSE)
 ```
 
 ##Trends in gdp per capita and inequality
@@ -321,13 +321,13 @@ The following graph shows the trend of the explanatory variables in Singapore be
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
 
 # Creating first figure: trend in gdp, bottom 90% and top 10% average income
-fig.1 <- ggplot(data.final, aes(x= date)) +
+fig.1 <- ggplot2::ggplot(data.final, aes(x= date)) +
   geom_line(aes(y=data.final$top, color= "top")) +
-  geom_line(aes(y=data.final$bottom, color = "bottom")) +
-  geom_line(aes(y=data.final$gdp.per.capita, color = "gdp.per.capita")) +
+  geom_line(aes(y=data.final$bottom, color = "bottom")) + 
+  geom_line (aes(y=data.final$gdp.per.capita, color = "gdp.per.capita")) +
   theme_light()
 
-#changing the name of the variables in the y axis
+#changing the name of the variables in the axis
 fig.1<-fig.1 + labs(x = "years", y = NULL)
 
 #changing the position of the legend 
@@ -342,16 +342,14 @@ fig.1 <- fig.1 + scale_colour_discrete(name= NULL,
 #changing the colour of the background of the plot
 fig.1 <- fig.1 + theme(panel.border = element_blank(),
                        panel.grid.major = element_blank(),
-                       panel.grid.minor = element_blank(),
-                       axis.line.x = element_line(size = 0.25, linetype = "solid",
-                                                  colour = "black"), 
-                       axis.line.y = element_line(size = 0.25, linetype = "solid",
+                       panel.grid.minor = element_blank())
+#making the axes appear
+fig.1 <- fig.1 + theme(axis.line= element_line(size = 0.25, linetype = "solid",
                                                   colour = "black"))
 
 #giving a title to the graph
-fig.1 <- fig.1 + ggtitle("Figure 1 - Gdp per capita, top 10% and bottom 90% average income\n
-in Singapore measured in national currency at current prices (1995-2014)") +
-  theme(plot.title = element_text(lineheight=0.5, size = 10))
+fig.1 <- fig.1 + ggtitle("Figure 1 - Gdp per capita, top 10% and bottom 90% average income\n in Singapore measured in national currency at current prices (1995-2014)") + theme(plot.title = element_text(lineheight= 1, size = 10))
+
 fig.1
 ```
 
@@ -375,6 +373,7 @@ fig.2 <- fig.2 + theme(panel.border = element_blank(),
                                    
 #giving a title to the graph
 fig.2 <- fig.2 + ggtitle("Figure 2 - Inequality in Singapore measured by the distance between \n the top 10% and bottom 90% average income in number of times (1995-2014)") + theme(plot.title = element_text(lineheight=1, size = 10))
+
 fig.2
 ```
 
@@ -385,39 +384,30 @@ The following graph shows the number of public and private vehicles present in S
 ```{r, echo = FALSE, message=FALSE, warning = FALSE}
 #creating the third figure: trend in number of vehicles      
 fig.3 <- ggplot2::ggplot(data.final, aes(x=data.final$date)) + 
-  geom_line(aes(y=data.final$cars, color="cars")) + 
+  geom_line(aes(y=data.final$cars, colour="cars")) + 
   geom_line(aes(y=data.final$rentalcars, color="rental cars")) + 
-  geom_line(aes(y=data.final$taxis, color="taxis")) +
-  geom_line(aes(y=data.final$buses, color="buses")) +
-  geom_line(aes(y=data.final$motorbikes, color="motorbikes")) + 
+  geom_line(aes(y=data.final$taxis, colour="taxis")) +
+  geom_line(aes(y=data.final$buses, colour="buses")) +
+  geom_line(aes(y=data.final$motorbikes, colour="motorbikes")) + 
   theme_classic()
 
-#changing the name of the variables in the y axis
+#changing the name of the variables in the axes
 fig.3 <- fig.3 + labs(x = "years", y = NULL)
+
+#hiding the title of the legend
+fig.3 <- fig.3 + theme(legend.title=element_blank())
 
 #changing the position of the legend 
 fig.3 <- fig.3 + theme(legend.position="bottom")
 
-#changing the name of title and labels of legend
-fig.3 <- fig.3 + scale_colour_discrete(name= NULL,
-                                       breaks=c("buses", "cars", "motorbikes", "rental cars", "taxis"),
-                                       labels=c("buses", "cars", "motorbikes", "rental cars", "taxis"))
-
-#changing the colour of the background of the plot
-fig.3 <- fig.3 + theme(panel.border = element_blank(),
-                       panel.grid.major = element_blank(),
-                       panel.grid.minor = element_blank(),
-                       axis.line.x = element_line(size = 0.25, linetype = "solid",
-                                                  colour = "black"), 
-                       axis.line.y = element_line(size = 0.25, linetype = "solid",
-                                                  colour = "black"))
-#giving a title to the graph 
+# giving a title to the graph 
 fig.3 <- fig.3 + ggtitle("Figure 3 - Number of public and private vehicles in Singapore (1995-2014)") + theme(plot.title = element_text(lineheight=1, size = 10))
 
-#changing the scale of the y axis
+# changing the scale of the y axis
 fig.3 <- fig.3 + scale_y_continuous(name= NULL, labels = comma)
 
-fig.3                                  
+fig.3     
+
 ```
 
 At the same time,  the number of passengers in the main public transportation (MRT and buses) has increased consistenlty over time. Despite that, the publicly owned buses have not significantly changed in number. Consequently, this also supports the hypothesis that the usage of public transport is not entirely linked with the purchase of cars: in fact, usage of public transport has either increased (in the case of MRT and buses) or stayed the same (in the case of LRT), while the number of private cars has grown consistently. Even in this case a further assumption to be investigated is that those using public transports are lower earners. 
@@ -434,12 +424,12 @@ fig.4 <-fig.4 + labs(x = "years", y = NULL)
 
 #changing the colour of the background of the plot
 fig.4 <- fig.4 + theme(panel.border = element_blank(),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          axis.line.x = element_line(size = 0.25, linetype = "solid",
-                                   colour = "black"), 
-          axis.line.y = element_line(size = 0.25, linetype = "solid",
-                                   colour = "black"))
+                       panel.grid.major = element_blank(),
+                       panel.grid.minor = element_blank())
+#making the axes appear
+fig.4 <- fig.4 + theme(axis.line= element_line(size = 0.25, linetype = "solid",
+                                                  colour = "black"))
+
 ##changing the position of the legend 
 fig.4 <- fig.4 + theme(legend.position="bottom")
 
@@ -448,6 +438,7 @@ fig.4 <- fig.4 + scale_colour_discrete(name= NULL,
                          breaks=c("buses", "LRT", "MRT"),
                          labels=c("buses", "MRT", "LRT"))
 fig.4 <- fig.4 + ggtitle("Figure 4 - Average daily passengers using public transport in Singapore \n in thousands (1995-2014)") + theme(plot.title = element_text(lineheight=1, size = 10))
+
 fig.4
 ```
 
@@ -469,7 +460,7 @@ source("http://www.sthda.com/upload/rquery_cormat.r")
 rquery.cormat(data.final.c)
 ```
  
-![Figure 5:Correlationplot](/Users/rafalopezv/Dropbox/R/Third-assignment/Figures/Correlation Plot.png)
+![Figure 5:Correlationplot](/Users/rafalopezv/Dropbox/R/Third-assignment/Correlation Plot.png)
 
 The following table shows the correlation coefficients. ^[Considerations made in the previous footnote also apply for the correlation matrix.]
 
